@@ -3,6 +3,6 @@
 </script>
 
 <button
-  class="relative justify-center cursor-pointer inline-flex items-center space-x-2 text-center font-regular ease-out duration-200 rounded-md outline-none transition-all outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border bg-emerald-500 hover:bg-emerald-500/80 text-white border-emerald-500 focus-visible:outline-emerald-600 shadow-sm text-xs px-2.5 py-1"
-  ><span class="truncate">{label}</span></button
+  class="inline-flex items-center justify-center text-white text-md font-medium px-4 py-2 rounded-md outline-none shadow-sm ease-out transition-all duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border bg-brand-500 hover:bg-brand-500/80 border-brand focus-visible:outline-brand-600"
+  {...$$restProps}>{label}</button
 >
