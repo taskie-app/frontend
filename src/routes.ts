@@ -1,5 +1,6 @@
 import PageHome from "./pages/PageHome.svelte";
 import PageListProjects from "./pages/PageListProjects.svelte";
+import PageNewProject from "./pages/PageNewProject.svelte";
 import PageProjectDetails from "./pages/PageProjectDetails.svelte";
 import PageSignIn from "./pages/PageSignIn.svelte";
 import PageSignUp from "./pages/PageSignUp.svelte";
@@ -12,4 +13,5 @@ export const routes = {
   "/projects": PageListProjects,
   "/projects/:id": PageProjectDetails,
   "/tasks/:id": PageTaskDetails,
+  "/new-project": PageNewProject,
 };
