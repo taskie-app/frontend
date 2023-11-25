@@ -4,11 +4,11 @@
   import SideBar from "./components/SideBar.svelte";
 </script>
 
-<div class="flex">
-  <div class="flex flex-col w-64 h-screen bg-gray-100 sticky top-0 left-0">
+<div class="h-screen flex flex-col text-gray-800">
+  <div class="flex-1 flex">
     <SideBar />
-  </div>
-  <div class="flex-1">
-    <Router {routes} />
+    <div class="flex-1">
+      <Router {routes} />
+    </div>
   </div>
 </div>
