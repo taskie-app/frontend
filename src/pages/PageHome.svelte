@@ -1,13 +1,18 @@
 <script>
-  import { link, push } from "svelte-spa-router";
-  import MenuBar from "../components/MenuBar.svelte";
   import ProjectItem from "../components/ProjectItem.svelte";
   import Button from "../components/Button.svelte";
-  import ScreenTitle from "../components/ScreenTitle.svelte";
+  import { onMount } from "svelte";
+  import { authenticated } from "../stores/auth";
+  import { replace } from "svelte-spa-router";
   let showModal = false;
   const newProject = () => {
     showModal = true;
   };
+  onMount(() => {
+    if (!$authenticated) {
+      replace("/sign-in");
+    }
+  });
 </script>
 
 <div class="flex flex-1 flex-col">

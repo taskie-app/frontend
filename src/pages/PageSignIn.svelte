@@ -1,12 +1,31 @@
 <script lang="ts">
-  import { link, push } from "svelte-spa-router";
+  import { onMount } from "svelte";
+  import { link, replace } from "svelte-spa-router";
+  import { authenticated } from "../stores/auth";
+  import { api } from "../lib/api";
 
   let email = "";
   let password = "";
 
-  const submit = () => {
-    push("/");
-  };
+  onMount(() => {
+    if ($authenticated) {
+      replace("/");
+    }
+  });
+
+  async function submit() {
+    const {
+      data: { token },
+      error,
+    } = await api.signIn(email, password);
+    if (error) {
+      alert(error);
+    } else {
+      sessionStorage.setItem("token", token);
+      $authenticated = true;
+      replace("/");
+    }
+  }
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center space-y-8">

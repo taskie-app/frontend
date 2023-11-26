@@ -1,17 +1,36 @@
 <script lang="ts">
-  import { link, push } from "svelte-spa-router";
+  import { link, replace } from "svelte-spa-router";
+  import { api } from "../lib/api";
+  import { authenticated } from "../stores/auth";
+  import { onMount } from "svelte";
 
   let name = "";
   let email = "";
   let password = "";
 
-  const submit = () => {
-    push("/");
-  };
+  onMount(() => {
+    if ($authenticated) {
+      replace("/");
+    }
+  });
+
+  async function submit() {
+    const {
+      data: { token },
+      error,
+    } = await api.signUp(email, password);
+    if (error) {
+      alert(error);
+    } else {
+      sessionStorage.setItem("token", token);
+      $authenticated = true;
+      replace("/");
+    }
+  }
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center space-y-8">
-  <h2 class="text-2xl font-bold">Create new account</h2>
+  <h2 class="text-3xl font-medium">Create new account</h2>
 
   <div class="w-full max-w-sm space-y-4">
     <div class="space-y-1">
@@ -42,21 +61,11 @@
     </div>
 
     <div class="space-y-1">
-      <div class="flex items-center justify-between">
-        <label
-          for="password"
-          class="block text-sm font-medium leading-6 text-gray-900"
-          >Password</label
-        >
-        <div class="text-sm">
-          <a
-            href="/forgot-password"
-            use:link
-            class="font-semibold text-brand-600 hover:text-brand-500"
-            >Forgot password?</a
-          >
-        </div>
-      </div>
+      <label
+        for="password"
+        class="block text-sm font-medium leading-6 text-gray-900"
+        >Password</label
+      >
       <div>
         <input
           bind:value={password}
@@ -74,16 +83,16 @@
     <button
       on:click={submit}
       class="flex w-full justify-center rounded-md bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
-      >Sign in</button
+      >Sign up</button
     >
 
     <p class="mt-10 text-center text-sm text-gray-500">
-      Not a member?
+      Already a member?
       <a
         href="/sign-up"
         use:link
         class="font-semibold text-brand-600 hover:text-brand-500"
-        >Create an account</a
+        >Sign in to your account</a
       >
     </p>
   </div>
