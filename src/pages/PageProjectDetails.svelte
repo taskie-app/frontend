@@ -2,8 +2,24 @@
   import TaskItem from "../components/TaskItem.svelte";
   import MemberItem from "../components/MemberItem.svelte";
   import Button from "../components/Button.svelte";
+  import type { Project } from "../lib/types";
+  import { api } from "../lib/api";
 
-  export let params: { id?: number } = {};
+  export let params: { id: string };
+  let project: Project;
+
+  $: id = params.id;
+  $: id && fetchProject();
+  $: console.log(project);
+
+  async function fetchProject() {
+    const { data, error } = await api.getProjectDetails(params.id);
+    if (error) {
+      alert(error);
+    } else {
+      project = data.project;
+    }
+  }
 </script>
 
 <div class="flex flex-col">
@@ -11,13 +27,15 @@
     class="h-16 border-b px-8 flex items-center justify-between sticky top-0 left-0 bg-white"
   >
     <p class="text-gray-400">
-      Projects / <span class="text-gray-800">Project 2</span>
+      Projects / <span class="text-gray-800">{project?.name}</span>
     </p>
     <Button label="Add task" />
   </div>
 
   <div class="flex-1 p-8 space-y-4">
-    <h1 class="text-3xl font-medium">Project {params.id}</h1>
+    <h1 class="text-3xl font-medium">{project?.name}</h1>
+    <h1 class="text-xl">{project?.description}</h1>
+
     <div class="flex items-center">
       <div class="flex -space-x-2">
         <MemberItem />

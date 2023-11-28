@@ -5,13 +5,22 @@
   import { onMount } from "svelte";
   import { authenticated } from "./stores/auth";
   import { api } from "./lib/api";
+  import { projects } from "./stores/projectStore";
   onMount(() => {
-    api.getAuthenticated().then(({ error }) => {
-      $authenticated = !error;
-    });
+    $authenticated = !!sessionStorage.getItem("token");
+
+    fetchProjects();
   });
+
   function handleRouteFailure() {
     replace("/");
+  }
+
+  async function fetchProjects() {
+    const { data, error } = await api.getProjects();
+    if (!error) {
+      $projects = data.projects;
+    }
   }
 </script>
 
