@@ -8,6 +8,6 @@
 <a
   {href}
   use:link
-  use:active={{ className: "font-medium bg-gray-100" }}
-  class="px-3 py-2 rounded-md hover:bg-gray-100">{label}</a
+  use:active={{ className: "font-medium bg-gray-200" }}
+  class="px-3 py-2 rounded-md hover:bg-gray-200">{label}</a
 >
