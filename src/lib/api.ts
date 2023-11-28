@@ -30,11 +30,25 @@ class Api {
     return { error: true };
   }
 
-  async getProjects() {}
+  async getProjects() {
+    const { data } = await this.axios.get("/projects/");
+    return { data: data.data, error: data.error };
+  }
 
-  async createProject() {}
+  async createProject(name: string, description: string) {
+    const { data } = await this.axios.post("/projects/", {
+      name,
+      description,
+      manager: {},
+      members: [],
+    });
+    return { data: data.data, error: data.error };
+  }
 
-  async getProjectDetails(id: string) {}
+  async getProjectDetails(id: string) {
+    const { data } = await this.axios.get(`/projects/${id}`);
+    return { data: data.data, error: data.error };
+  }
 }
 
 export const api = new Api("//localhost:4000");
