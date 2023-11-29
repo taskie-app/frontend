@@ -4,7 +4,7 @@
   export let project: Project;
 </script>
 
-<a href="/projects/2" use:link
+<a href={`/projects/${project._id}`} use:link
   ><div
     class="h-44 !px-0 group pt-5 pb-0 group relative text-left bg-surface-100 border border-surface rounded-md p-5 flex flex-row h-32 transition ease-in-out duration-150 cursor-pointer hover:bg-overlay-hover hover:border-control"
   >
