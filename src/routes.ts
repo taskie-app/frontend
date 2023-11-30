@@ -6,7 +6,7 @@ import PageProjectDetails from "./pages/PageProjectDetails.svelte";
 import PageSignIn from "./pages/PageSignIn.svelte";
 import PageSignUp from "./pages/PageSignUp.svelte";
 import PageTaskDetails from "./pages/PageTaskDetails.svelte";
-import { authenticated } from "./stores/auth";
+import { authenticated } from "./stores/authStore";
 
 const conditions = [() => get(authenticated)];
 
