@@ -1,7 +1,7 @@
 <script lang="ts">
   import { link, replace } from "svelte-spa-router";
   import { api } from "../lib/api";
-  import { authenticated } from "../stores/auth";
+  import { authenticated } from "../stores/authStore";
   import { onMount } from "svelte";
 
   let name = "";

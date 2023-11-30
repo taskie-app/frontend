@@ -1,4 +1,4 @@
-export type ApiResult<T> = Promise<{ data: T; error: Error | null }>;
+export type ApiResult<T> = Promise<{ data: T; error: string | null }>;
 
 export type User = {
   _id: string;

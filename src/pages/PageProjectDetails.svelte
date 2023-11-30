@@ -1,42 +1,25 @@
 <script lang="ts">
-  import TaskItem from "../components/TaskItem.svelte";
   import MemberItem from "../components/MemberItem.svelte";
-  import Button from "../components/Button.svelte";
-  import type { Project } from "../lib/types";
-  import { api } from "../lib/api";
+  import PanelInviteMember from "../components/PanelInviteMember.svelte";
+  import TaskBoard from "../components/TaskBoard.svelte";
+  import { projects } from "../stores/projectStore";
 
   export let params: { id: string };
-  let project: Project;
-
-  $: id = params.id;
-  $: id && fetchProject();
-  $: console.log(project);
-
-  async function fetchProject() {
-    const { data, error } = await api.getProjectDetails(params.id);
-    if (error) {
-      alert(error);
-    } else {
-      project = data.project;
-    }
-  }
+  $: project = $projects.filter((project) => project._id == params.id)[0];
+  let inviteMemberPanelVisible = false;
 </script>
 
 <div class="flex flex-col">
-  <div
-    class="h-16 border-b px-8 flex items-center justify-between sticky top-0 left-0 bg-white"
-  >
-    <p class="text-gray-400">
-      Projects / <span class="text-gray-800">{project?.name}</span>
-    </p>
-    <Button label="Add task" />
-  </div>
-
   <div class="flex-1 p-8 space-y-4">
-    <h1 class="text-3xl font-medium">{project?.name}</h1>
-    <h1 class="text-xl">{project?.description}</h1>
+    <div>
+      <p class="text-gray-400">
+        Projects / <span class="text-gray-800">{project?.name}</span>
+      </p>
+      <h1 class="text-3xl font-medium">{project?.name}</h1>
+      <h1 class="text-xl">{project?.description}</h1>
+    </div>
 
-    <div class="flex items-center">
+    <div class="flex items-center gap-2">
       <div class="flex -space-x-2">
         <MemberItem />
         <MemberItem />
@@ -44,85 +27,19 @@
       </div>
       <button
         class="px-3 h-8 flex items-center gap-1 text-sm font-medium rounded-full shadow-sm border border-gray-300 bg-white hover:bg-gray-50"
+        on:click={() => (inviteMemberPanelVisible = true)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-plus"
-          ><path d="M5 12h14" /><path d="M12 5v14" /></svg
-        >
         Invite</button
       >
+      <div class="flex-1"></div>
+      <button>List</button>
+      <button>Board</button>
+      <button>Settings</button>
+      <button>New task</button>
     </div>
 
-    <div class="flex-1 flex gap-4 overflow-y-hidden">
-      <div class="flex flex-col w-[320px] gap-4">
-        <div class="flex items-center gap-2 py-2 border-b-2 border-b-gray-500">
-          <h2 class="text-xl font-medium">Todo</h2>
-          <div class="border rounded-full px-3"><p class="text-sm">2</p></div>
-        </div>
-        <TaskItem
-          id="1"
-          name="Backend"
-          key="TK-2"
-          description="Create backend api CRUD project"
-          memberId="1"
-        />
-        <TaskItem
-          id="1"
-          name="Backend"
-          key="TK-2"
-          description="Create backend api CRUD project"
-          memberId="1"
-        />
-        <TaskItem
-          id="1"
-          name="Backend"
-          key="TK-2"
-          description="Create backend api CRUD project"
-          memberId="1"
-        />
-        <TaskItem
-          id="1"
-          name="Backend"
-          key="TK-2"
-          description="Create backend api CRUD project"
-          memberId="1"
-        />
-      </div>
-      <div class="flex flex-col w-[320px] gap-4">
-        <div class="flex items-center gap-2 py-2 border-b-2 border-b-blue-500">
-          <h2 class="text-xl font-medium">In progress</h2>
-          <div class="border rounded-full px-3"><p class="text-sm">2</p></div>
-        </div>
-        <TaskItem
-          id="1"
-          name="Backend"
-          key="TK-2"
-          description="Create backend api CRUD project"
-          memberId="1"
-        />
-      </div>
-      <div class="flex flex-col w-[320px] gap-4">
-        <div class="flex items-center gap-2 py-2 border-b-2 border-b-green-500">
-          <h2 class="text-xl font-medium">Done</h2>
-          <div class="border rounded-full px-3"><p class="text-sm">2</p></div>
-        </div>
-        <TaskItem
-          id="1"
-          name="Backend"
-          key="TK-2"
-          description="Create backend api CRUD project"
-          memberId="1"
-        />
-      </div>
-    </div>
+    <TaskBoard />
   </div>
 </div>
+
+<PanelInviteMember bind:visible={inviteMemberPanelVisible} {project} />

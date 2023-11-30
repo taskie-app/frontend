@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { link, replace } from "svelte-spa-router";
-  import { authenticated } from "../stores/auth";
+  import { authenticated } from "../stores/authStore";
   import { api } from "../lib/api";
 
   let email = "";
@@ -14,14 +14,10 @@
   });
 
   async function submit() {
-    const {
-      data: { token },
-      error,
-    } = await api.signIn(email, password);
+    const { error } = await api.signIn(email, password);
     if (error) {
       alert(error);
     } else {
-      sessionStorage.setItem("token", token);
       $authenticated = true;
       replace("/");
     }

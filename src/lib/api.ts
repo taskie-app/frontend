@@ -7,6 +7,7 @@ class Api {
   constructor(baseURL: string) {
     this.axios = axios.create({
       baseURL,
+      withCredentials: true,
     });
   }
   async signUp(email: string, password: string): ApiResult<{ token: string }> {
@@ -28,7 +29,9 @@ class Api {
   }
 
   async getAuthenticated(): ApiResult<{ authenticated: boolean }> {
-    return { data: { authenticated: true }, error: null };
+    const { data } = await this.axios.get("/authenticated/");
+    const { authenticated, error } = data;
+    return { data: { authenticated }, error };
   }
 
   async getProjects(): ApiResult<{ projects: Project[] }> {
@@ -46,6 +49,7 @@ class Api {
       description,
     });
     const { project, error } = data;
+    if (error) console.error(error);
     return { data: { project }, error };
   }
 
