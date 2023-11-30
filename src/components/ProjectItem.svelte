@@ -1,16 +1,18 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
+  import type { Project } from "../lib/types";
+  export let project: Project;
 </script>
 
-<a href="/projects/2" use:link
+<a href={`/projects/${project._id}`} use:link
   ><div
     class="h-44 !px-0 group pt-5 pb-0 group relative text-left bg-surface-100 border border-surface rounded-md p-5 flex flex-row h-32 transition ease-in-out duration-150 cursor-pointer hover:bg-overlay-hover hover:border-control"
   >
     <div class="flex h-full w-full flex-col space-y-2">
       <div class="w-full justify-between space-y-1.5 px-5">
-        <p class="flex-shrink truncate text-sm pr-4">food</p>
+        <p class="flex-shrink truncate text-sm pr-4">{project.name}</p>
         <span class="text-sm lowercase text-foreground-light"
-          >AWS | ap-southeast-1</span
+          >{project.description}</span
         >
         <div class="flex items-center space-x-1.5"></div>
       </div>

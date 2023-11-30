@@ -2,20 +2,40 @@
   import TaskItem from "../components/TaskItem.svelte";
   import MemberItem from "../components/MemberItem.svelte";
   import Button from "../components/Button.svelte";
+  import type { Project } from "../lib/types";
+  import { api } from "../lib/api";
 
-  export let params: { id?: number } = {};
+  export let params: { id: string };
+  let project: Project;
+
+  $: id = params.id;
+  $: id && fetchProject();
+  $: console.log(project);
+
+  async function fetchProject() {
+    const { data, error } = await api.getProjectDetails(params.id);
+    if (error) {
+      alert(error);
+    } else {
+      project = data.project;
+    }
+  }
 </script>
 
 <div class="flex flex-col">
-  <div class="h-16 border-b px-8 flex items-center justify-between">
+  <div
+    class="h-16 border-b px-8 flex items-center justify-between sticky top-0 left-0 bg-white"
+  >
     <p class="text-gray-400">
-      Projects / <span class="text-gray-800">Project 2</span>
+      Projects / <span class="text-gray-800">{project?.name}</span>
     </p>
     <Button label="Add task" />
   </div>
 
   <div class="flex-1 p-8 space-y-4">
-    <h1 class="text-3xl font-medium">Project {params.id}</h1>
+    <h1 class="text-3xl font-medium">{project?.name}</h1>
+    <h1 class="text-xl">{project?.description}</h1>
+
     <div class="flex items-center">
       <div class="flex -space-x-2">
         <MemberItem />
@@ -42,11 +62,9 @@
       >
     </div>
 
-    <div class="flex-1 flex gap-4 bg-red-50 overflow-y-hidden">
-      <div class="flex flex-col w-[320px]">
-        <div
-          class="flex items-center gap-2 py-2 mb-4 border-b-2 border-b-gray-500"
-        >
+    <div class="flex-1 flex gap-4 overflow-y-hidden">
+      <div class="flex flex-col w-[320px] gap-4">
+        <div class="flex items-center gap-2 py-2 border-b-2 border-b-gray-500">
           <h2 class="text-xl font-medium">Todo</h2>
           <div class="border rounded-full px-3"><p class="text-sm">2</p></div>
         </div>
@@ -79,10 +97,8 @@
           memberId="1"
         />
       </div>
-      <div class="flex flex-col w-[320px]">
-        <div
-          class="flex items-center gap-2 py-2 mb-4 border-b-2 border-b-blue-500"
-        >
+      <div class="flex flex-col w-[320px] gap-4">
+        <div class="flex items-center gap-2 py-2 border-b-2 border-b-blue-500">
           <h2 class="text-xl font-medium">In progress</h2>
           <div class="border rounded-full px-3"><p class="text-sm">2</p></div>
         </div>
@@ -94,10 +110,8 @@
           memberId="1"
         />
       </div>
-      <div class="flex flex-col w-[320px]">
-        <div
-          class="flex items-center gap-2 py-2 mb-4 border-b-2 border-b-green-500"
-        >
+      <div class="flex flex-col w-[320px] gap-4">
+        <div class="flex items-center gap-2 py-2 border-b-2 border-b-green-500">
           <h2 class="text-xl font-medium">Done</h2>
           <div class="border rounded-full px-3"><p class="text-sm">2</p></div>
         </div>
