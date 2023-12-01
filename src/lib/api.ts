@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-import type { ApiResult, Project } from "./types";
+import type { ApiResult, Project, Task } from "./types";
 import { API_BASE_URL } from "./config";
 
 class Api {
@@ -16,7 +16,7 @@ class Api {
       password,
     });
     const { token, error } = data;
-    return { data: { token }, error };
+    return { token, error };
   }
 
   async signIn(email: string, password: string): ApiResult<{ token: string }> {
@@ -25,19 +25,19 @@ class Api {
       password,
     });
     const { token, error } = data;
-    return { data: { token }, error };
+    return { token, error };
   }
 
   async getAuthenticated(): ApiResult<{ authenticated: boolean }> {
     const { data } = await this.axios.get("/authenticated/");
     const { authenticated, error } = data;
-    return { data: { authenticated }, error };
+    return { authenticated, error };
   }
 
   async getProjects(): ApiResult<{ projects: Project[] }> {
     const { data } = await this.axios.get("/projects/");
     const { projects, error } = data;
-    return { data: { projects }, error };
+    return { projects, error };
   }
 
   async createProject(
@@ -50,7 +50,7 @@ class Api {
     });
     const { project, error } = data;
     if (error) console.error(error);
-    return { data: { project }, error };
+    return { project, error };
   }
 
   async getProjectDetails(id: string) {
@@ -58,10 +58,26 @@ class Api {
     return { data: data.data, error: data.error };
   }
 
-  async getProjectTasks(id: string) {
-    const { data } = await this.axios.get(`/tasks?projectId=${id}`);
+  async getProjectTasks(id: string): ApiResult<{ tasks: Task[] }> {
+    const { data } = await this.axios.get(`/projects/${id}/tasks`);
     const { tasks, error } = data;
-    return { data: { tasks }, error };
+    return { tasks, error };
+  }
+
+  async deleteAllProjects() {
+    const { data } = await this.axios.delete("/projects/");
+    const { error } = data;
+    return { error };
+  }
+
+  async createTask(projectId: string, name: string, description: string) {
+    const { data } = await this.axios.post("/tasks/", {
+      projectId,
+      name,
+      description,
+    });
+    const { task, error } = data;
+    return { task, error };
   }
 }
 
