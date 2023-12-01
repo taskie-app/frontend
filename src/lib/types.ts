@@ -1,4 +1,4 @@
-export type ApiResult<T> = Promise<{ data: T; error: string | null }>;
+export type ApiResult<T> = Promise<T & { error: string | null }>;
 
 export type User = {
   _id: string;
@@ -11,4 +11,11 @@ export type Project = {
   description: string;
   manager: unknown;
   members: unknown;
+};
+
+export type Task = {
+  _id: string;
+  name: string;
+  description: string;
+  status: "TODO" | "IN_PROGRESS" | "DONE";
 };

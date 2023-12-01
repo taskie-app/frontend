@@ -1,4 +1,5 @@
 <script>
+  import { deleteAllProjects } from "../stores/projectStore";
   import PopupMenu from "./PopupMenu.svelte";
 </script>
 
@@ -19,4 +20,5 @@
 
     <div slot="content">Hello</div>
   </PopupMenu>
+  <button on:click={deleteAllProjects}>Delete all projects</button>
 </div>

@@ -6,7 +6,7 @@
   export let task: Task;
 </script>
 
-<a href={`/tasks/${task._id}`} use:link use:draggable={task}>
+<a href={`/tasks/${task._id}`} use:link use:draggable={task._id}>
   <div class="border rounded-lg shadow-sm bg-white p-4 space-y-8">
     <div>
       <h1 class="text-lg font-medium">{task.name}</h1>
