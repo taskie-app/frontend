@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade, fly } from "svelte/transition";
   import { clickOutside } from "../actions/clickOutside";
   export let visible: boolean;
   function hide() {
@@ -6,16 +7,16 @@
   }
 </script>
 
-<div
-  class={`absolute top-0 left-0 w-screen h-screen ${
-    visible ? "flex" : "hidden"
-  } bg-black/50 items-center justify-center`}
->
+{#if visible}
   <div
-    class="bg-white w-full max-w-2xl"
-    use:clickOutside
-    on:click_outside={hide}
+    class={`absolute top-0 left-0 w-screen h-screen flex bg-black/50 items-center justify-center`}
   >
-    <slot />
+    <div
+      class="bg-white w-full max-w-2xl p-6 rounded"
+      use:clickOutside
+      on:click_outside={hide}
+    >
+      <slot />
+    </div>
   </div>
-</div>
+{/if}

@@ -4,8 +4,7 @@
   import { authenticated } from "../stores/authStore";
   import { onMount } from "svelte";
 
-  let name = "";
-  let email = "";
+  let username = "";
   let password = "";
 
   onMount(() => {
@@ -15,14 +14,10 @@
   });
 
   async function submit() {
-    const {
-      data: { token },
-      error,
-    } = await api.signUp(email, password);
+    const { error } = await api.signUp(username, password);
     if (error) {
-      alert(error);
+      console.error(error);
     } else {
-      sessionStorage.setItem("token", token);
       $authenticated = true;
       replace("/");
     }
@@ -34,28 +29,12 @@
 
   <div class="w-full max-w-sm space-y-4">
     <div class="space-y-1">
-      <label for="name" class="text-sm font-medium">Name</label>
+      <label for="username" class="text-sm font-medium">Username</label>
       <input
-        bind:value={name}
-        id="name"
-        name="name"
+        bind:value={username}
         type="text"
         required
-        placeholder="Your name"
-        class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-      />
-    </div>
-
-    <div class="space-y-1">
-      <label for="email" class="text-sm font-medium">Email address</label>
-      <input
-        bind:value={email}
-        id="email"
-        name="email"
-        type="email"
-        autocomplete="email"
-        required
-        placeholder="Email address"
+        placeholder="Username"
         class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
       />
     </div>

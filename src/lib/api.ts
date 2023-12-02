@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-import type { ApiResult, Project, Task } from "./types";
+import type { ApiResult, Project, Task, User } from "./types";
 import { API_BASE_URL } from "./config";
 
 class Api {
@@ -10,28 +10,52 @@ class Api {
       withCredentials: true,
     });
   }
-  async signUp(email: string, password: string): ApiResult<{ token: string }> {
+  async signUp(
+    username: string,
+    password: string
+  ): ApiResult<{ token: string }> {
     const { data } = await this.axios.post("/users", {
-      email,
+      username,
       password,
     });
     const { token, error } = data;
     return { token, error };
   }
 
-  async signIn(email: string, password: string): ApiResult<{ token: string }> {
+  async signIn(
+    username: string,
+    password: string
+  ): ApiResult<{ token: string }> {
     const { data } = await this.axios.post("/users/sign-in", {
-      email,
+      username,
       password,
     });
     const { token, error } = data;
     return { token, error };
+  }
+
+  async signOut() {
+    const { data } = await this.axios.post("/users/sign-out");
+    const { error } = data;
+    return { error };
   }
 
   async getAuthenticated(): ApiResult<{ authenticated: boolean }> {
     const { data } = await this.axios.get("/authenticated/");
     const { authenticated, error } = data;
     return { authenticated, error };
+  }
+
+  async getUsers(filter: {
+    email?: string;
+    username?: string;
+  }): ApiResult<{ users: User[] }> {
+    const { username, email } = filter;
+    const { data } = await this.axios.get(
+      `/users?username=${username}&email=${email}`
+    );
+    const { users, error } = data;
+    return { users, error };
   }
 
   async getProjects(): ApiResult<{ projects: Project[] }> {
@@ -76,6 +100,18 @@ class Api {
       name,
       description,
     });
+    const { task, error } = data;
+    return { task, error };
+  }
+
+  async getTask(taskId: string): ApiResult<{ task: Task }> {
+    const { data } = await this.axios.get(`/tasks/${taskId}`);
+    const { task, error } = data;
+    return { task, error };
+  }
+
+  async updateTask(taskId: string, newData: Task): ApiResult<{ task: Task }> {
+    const { data } = await this.axios.put(`/tasks/${taskId}`, newData);
     const { task, error } = data;
     return { task, error };
   }
