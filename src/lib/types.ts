@@ -3,6 +3,7 @@ export type ApiResult<T> = Promise<T & { error: string | null }>;
 export type User = {
   _id: string;
   name: string;
+  username: string;
 };
 
 export type Project = {

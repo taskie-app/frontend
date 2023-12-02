@@ -32,7 +32,7 @@
       </div>
     </div>
     {#each todoTasks as task}
-      <TaskBoardItem {task} />
+      <TaskBoardItem {task} {project} />
     {/each}
   </div>
   <div
@@ -50,7 +50,7 @@
       </div>
     </div>
     {#each inProgressTasks as task}
-      <TaskBoardItem {task} />
+      <TaskBoardItem {task} {project} />
     {/each}
   </div>
   <div
@@ -68,7 +68,7 @@
       </div>
     </div>
     {#each doneTasks as task}
-      <TaskBoardItem {task} />
+      <TaskBoardItem {task} {project} />
     {/each}
   </div>
 </div>

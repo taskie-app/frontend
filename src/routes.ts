@@ -22,7 +22,7 @@ export const routes = {
     component: PageProjectDetails,
     conditions,
   }),
-  "/tasks/:id": wrap({
+  "/tasks/:projectId/:taskId": wrap({
     component: PageTaskDetails,
     conditions,
   }),
