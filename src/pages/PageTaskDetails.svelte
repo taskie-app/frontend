@@ -27,7 +27,7 @@
     if (!taskId) return;
     const { task: fetchedTask, error } = await api.getTask(taskId);
     if (error) {
-      alert(error);
+      console.error(error);
     } else {
       task = fetchedTask;
     }

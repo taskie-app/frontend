@@ -1,8 +1,17 @@
 <script lang="ts">
   export let label: string;
+  export let preset: "primary" | "secondary" = "secondary";
+  export let rounded = false;
+  const baseClass =
+    "inline-flex items-center justify-center border border-black/20 text-sm font-medium px-4 h-8 rounded";
+  $: bgClass =
+    preset == "primary"
+      ? "bg-brand-500 hover:bg-brand-600"
+      : "bg-white hover:bg-gray-50";
+  $: textClass = preset == "primary" ? "text-white" : "text-gray-800";
+  $: borderClass = rounded ? "rounded-full" : "";
+  $: buttonClass = `${baseClass} ${bgClass} ${textClass} ${borderClass}`;
+  export let onClick: () => void;
 </script>
 
-<button
-  class="inline-flex items-center justify-center text-white text-md font-medium px-4 py-2 rounded-md outline-none shadow-sm ease-out transition-all duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 border bg-brand-500 hover:bg-brand-500/80 border-brand focus-visible:outline-brand-600"
-  {...$$restProps}>{label}</button
->
+<button class={buttonClass} on:click={onClick}>{label}</button>

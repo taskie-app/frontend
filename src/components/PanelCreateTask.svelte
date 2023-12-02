@@ -1,9 +1,12 @@
 <script lang="ts">
   import OverlayPanel from "./OverlayPanel.svelte";
   import { api } from "../lib/api";
-  import type { Project } from "../lib/types";
+  import type { Project, Task } from "../lib/types";
+  import Button from "./Button.svelte";
+  import { preprocess } from "svelte/compiler";
   export let visible: boolean;
   export let project: Project;
+  export let onTaskCreated: (task: Task) => void;
   let name = "";
   let description = "";
   function hide() {
@@ -16,30 +19,33 @@
       description
     );
     if (error) {
-      alert(error);
+      console.error(error);
     } else {
-      console.log(task);
+      onTaskCreated(task);
+      hide();
     }
   }
 </script>
 
 <OverlayPanel bind:visible>
-  <form on:submit|preventDefault={submit}>
+  <div class="flex flex-col gap-4">
+    <h4 class="font-medium">Create task</h4>
     <input
       type="text"
-      name=""
-      id=""
       placeholder="Task name"
       bind:value={name}
+      class="boder border-black/20 rounded px-4 h-10 outline-none focus:outline-none focus:ring-0"
     />
     <input
       type="text"
-      name=""
-      id=""
       placeholder="Description"
       bind:value={description}
+      class="boder border-black/20 rounded px-4 h-10 outline-none focus:ring-0"
     />
-    <button on:click={hide}>Cancel</button>
-    <button type="submit">Create</button>
-  </form>
+    <div class="border-b"></div>
+    <div class="ml-auto space-x-2">
+      <Button preset="secondary" label="Cancel" onClick={hide} />
+      <Button preset="primary" label="Create" onClick={submit} />
+    </div>
+  </div>
 </OverlayPanel>

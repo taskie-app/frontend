@@ -9,6 +9,8 @@
   import TaskList from "../components/TaskList.svelte";
   import Button from "../components/Button.svelte";
   import SearchIcon from "../icons/SearchIcon.svelte";
+  import { link } from "svelte-spa-router";
+  import LinkIcon from "../icons/LinkIcon.svelte";
 
   export let params: { id: string };
 
@@ -17,7 +19,9 @@
   let taskNameSearch = "";
   let inviteMemberPanelVisible = false;
   let createTaskPanelVisible = false;
-  $: filterdTasks = tasks.filter((t) => t.name.includes(taskNameSearch));
+  $: filterdTasks = tasks.filter((t) =>
+    t.name.toLowerCase().includes(taskNameSearch.trim().toLowerCase())
+  );
 
   // on params change, update the project
   $: project = $projects.filter((project) => project._id == params.id)[0];
@@ -29,10 +33,14 @@
       project._id
     );
     if (error) {
-      alert(error);
+      console.error(error);
     } else {
       tasks = fetchedTasks;
     }
+  }
+
+  function addTask(task: Task) {
+    tasks = [...tasks, task];
   }
 
   async function changeTaskStatus(
@@ -58,6 +66,20 @@
 
 <div class="flex flex-col">
   <div class="flex-1 p-8 space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1">
+        <a
+          href={`/projects/`}
+          use:link
+          class="text-gray-400 hover:text-gray-600">Projects</a
+        >
+        /
+        <button class="flex items-center gap-1">
+          <div>{project?.name}</div>
+          <LinkIcon />
+        </button>
+      </div>
+    </div>
     <!-- Name and description -->
     <div class="space-y-2">
       <h1 class="text-3xl font-medium">{project?.name}</h1>
@@ -133,4 +155,8 @@
 </div>
 
 <PanelInviteMember bind:visible={inviteMemberPanelVisible} {project} />
-<PanelCreateTask bind:visible={createTaskPanelVisible} {project} />
+<PanelCreateTask
+  bind:visible={createTaskPanelVisible}
+  {project}
+  onTaskCreated={addTask}
+/>

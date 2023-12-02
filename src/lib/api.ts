@@ -10,22 +10,34 @@ class Api {
       withCredentials: true,
     });
   }
-  async signUp(email: string, password: string): ApiResult<{ token: string }> {
+  async signUp(
+    username: string,
+    password: string
+  ): ApiResult<{ token: string }> {
     const { data } = await this.axios.post("/users", {
-      email,
+      username,
       password,
     });
     const { token, error } = data;
     return { token, error };
   }
 
-  async signIn(email: string, password: string): ApiResult<{ token: string }> {
+  async signIn(
+    username: string,
+    password: string
+  ): ApiResult<{ token: string }> {
     const { data } = await this.axios.post("/users/sign-in", {
-      email,
+      username,
       password,
     });
     const { token, error } = data;
     return { token, error };
+  }
+
+  async signOut() {
+    const { data } = await this.axios.post("/users/sign-out");
+    const { error } = data;
+    return { error };
   }
 
   async getAuthenticated(): ApiResult<{ authenticated: boolean }> {
