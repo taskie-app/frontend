@@ -10,13 +10,15 @@ export type Project = {
   _id: string;
   name: string;
   description: string;
-  manager: unknown;
-  members: unknown;
+  manager: User;
+  members: User[];
 };
 
 export type Task = {
   _id: string;
   name: string;
-  description: string;
+  description?: string;
+  assignedTo?: User;
   status: "TODO" | "IN_PROGRESS" | "DONE";
+  dueDate?: string;
 };
