@@ -18,7 +18,7 @@
 
 <div class="flex-1 flex gap-4 overflow-y-hidden">
   <div
-    class="flex flex-col w-[320px] gap-4"
+    class="flex flex-col w-[320px] gap-4 dropzone"
     use:dropzone={{
       on_dropzone(taskId) {
         onTaskDropped(taskId, "TODO");
@@ -36,7 +36,7 @@
     {/each}
   </div>
   <div
-    class="flex flex-col w-[320px] gap-4"
+    class="flex flex-col w-[320px] gap-4 dropzone"
     use:dropzone={{
       on_dropzone(taskId) {
         onTaskDropped(taskId, "IN_PROGRESS");
@@ -54,7 +54,7 @@
     {/each}
   </div>
   <div
-    class="flex flex-col w-[320px] gap-4"
+    class="flex flex-col w-[320px] gap-4 dropzone"
     use:dropzone={{
       on_dropzone(taskId) {
         onTaskDropped(taskId, "DONE");
@@ -72,3 +72,13 @@
     {/each}
   </div>
 </div>
+
+<style>
+  .dropzone {
+  }
+
+  .dropzone:global(.droppable) {
+    background-color: #f1f1f1;
+    border-radius: 12px;
+  }
+</style>

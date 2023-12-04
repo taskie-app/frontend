@@ -82,7 +82,7 @@ class Api {
   }
 
   async getProjectTasks(id: string): ApiResult<{ tasks: Task[] }> {
-    const { data } = await this.axios.get(`/projects/${id}/tasks`);
+    const { data } = await this.axios.get(`/tasks?projectId=${id}`);
     const { tasks, error } = data;
     return { tasks, error };
   }

@@ -15,20 +15,21 @@
 >
   <div class="flex items-start justify-between w-full">
     <h2 class="text-xl">{project.name}</h2>
-    <button
+    <!-- <button
       class="rounded-full hover:bg-gray-5 0 h-8 w-8 flex items-center justify-center"
       on:click|stopPropagation={() => {
         console.log("Options");
       }}
     >
       <MoreIcon />
-    </button>
+    </button> -->
   </div>
   <h3 class="text-gray-400">{project.description}</h3>
 
   <div class="flex items-center -space-x-2 mt-8">
-    <MemberItem />
-    <MemberItem />
-    <MemberItem />
+    <MemberItem member={project?.manager} />
+    {#each project?.members as member}
+      <MemberItem {member} />
+    {/each}
   </div>
 </button>

@@ -14,11 +14,10 @@
       <p class="text-gray-400">{task.description}</p>
     </div>
 
-    <div class="flex items-center justify-between">
-      <div class="bg-brand-100 px-2 py-1 rounded-md">
-        <p class="text-sm font-medium text-brand-600"></p>
-      </div>
-      <div class="w-10 h-10 rounded-full bg-gray-100"></div>
+    <div
+      class="inline-flex items-center text-sm ml-auto px-3 h-6 rounded-full text-gray-600 bg-gray-100"
+    >
+      {task.assignedTo?.username ?? "Unassigned"}
     </div>
   </div>
 </a>
