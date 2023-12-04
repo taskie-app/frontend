@@ -7,6 +7,7 @@ import PageSignIn from "./pages/PageSignIn.svelte";
 import PageSignUp from "./pages/PageSignUp.svelte";
 import PageTaskDetails from "./pages/PageTaskDetails.svelte";
 import { authenticated } from "./stores/authStore";
+import PageProfile from "./pages/PageProfile.svelte";
 
 const conditions = [() => get(authenticated)];
 
@@ -24,6 +25,10 @@ export const routes = {
   }),
   "/tasks/:projectId/:taskId": wrap({
     component: PageTaskDetails,
+    conditions,
+  }),
+  "/profile": wrap({
+    component: PageProfile,
     conditions,
   }),
 };

@@ -14,6 +14,6 @@
   <div class="whitespace-nowrap py-2 text-gray-700">{task.status}</div>
   <div class="whitespace-nowrap py-2 text-gray-700">{task.dueDate}</div>
   <div class="whitespace-nowrap py-2 text-gray-700">
-    {task.assignedTo ?? "Unassigned"}
+    {task.assignedTo?.username ?? "Unassigned"}
   </div>
 </a>

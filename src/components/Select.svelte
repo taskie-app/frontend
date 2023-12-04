@@ -20,21 +20,19 @@
   <div class="text-sm text-gray-400">{label}</div>
   <div class={`relative ${widthClass}`}>
     <button
-      class="w-full bg-gray-50 border rounded px-5 py-2 hover:bg-gray-100 text-left"
+      class="w-full bg-gray-50 border rounded px-4 h-10 hover:bg-gray-100 text-left"
       on:click={toggle}
     >
-      <span>
-        {text}
-      </span>
+      {text}
     </button>
     <div
       class:hidden={!showOptions}
-      class="absolute top-0 right-1 -translate-x-full w-full z-10 p-2 space-y-2 bg-white border rounded"
+      class="absolute top-0 right-1 -translate-x-full w-full z-10 p-1 bg-white border rounded"
     >
       <div class="flex flex-col w-full">
         {#each options as option}
           <button
-            class="w-full px-3.5 py-2 rounded-sm hover:bg-gray-100 text-left"
+            class="w-full px-4 h-9 rounded-sm hover:bg-gray-100 text-left"
             on:click={() => select(option.value)}>{option.text}</button
           >
         {/each}
