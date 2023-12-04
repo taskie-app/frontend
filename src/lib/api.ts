@@ -46,16 +46,15 @@ class Api {
     return { authenticated, error };
   }
 
-  async getUsers(filter: {
-    email?: string;
-    username?: string;
-  }): ApiResult<{ users: User[] }> {
-    const { username, email } = filter;
-    const { data } = await this.axios.get(
-      `/users?username=${username}&email=${email}`
-    );
+  async getUsers(filter: { username?: string }): ApiResult<{ users: User[] }> {
+    const { username } = filter;
+    const { data } = await this.axios.get(`/users?username=${username}`);
     const { users, error } = data;
     return { users, error };
+  }
+
+  async updateUser(id: string, newData: User) {
+    const { data } = await this.axios.put(`/users/${id}`, newData);
   }
 
   async getProjects(): ApiResult<{ projects: Project[] }> {
@@ -83,9 +82,15 @@ class Api {
   }
 
   async getProjectTasks(id: string): ApiResult<{ tasks: Task[] }> {
-    const { data } = await this.axios.get(`/projects/${id}/tasks`);
+    const { data } = await this.axios.get(`/tasks?projectId=${id}`);
     const { tasks, error } = data;
     return { tasks, error };
+  }
+
+  async updateProject(id: string, newData: Project) {
+    const { data } = await this.axios.put(`/projects/${id}`, newData);
+    const { error } = data;
+    return { error };
   }
 
   async deleteAllProjects() {

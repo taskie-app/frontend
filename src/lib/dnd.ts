@@ -27,7 +27,7 @@ export const draggable: Action<HTMLElement, string> = (node, data) => {
 export const dropzone: Action<HTMLElement, any> = (node, options) => {
   let state = {
     dropEffect: "move",
-    dragover_class: "bg-red-500",
+    dragover_class: "droppable",
     ...options,
   };
 

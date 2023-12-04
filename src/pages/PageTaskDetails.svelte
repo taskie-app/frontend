@@ -6,6 +6,8 @@
   import { projects } from "../stores/projectStore";
   import SelectAssignee from "../components/SelectAssignee";
   import { fade } from "svelte/transition";
+  import SelectDate from "../components/Select/SelectDate.svelte";
+  import LinkIcon from "../icons/LinkIcon.svelte";
 
   export let params: { projectId: string; taskId: string };
   $: project = $projects.find((project) => project._id == params.projectId);
@@ -13,13 +15,18 @@
   $: taskId && fetchTask();
 
   let task: Task;
+  $: console.log(task);
   let oldName: string;
   let oldDescription: string;
   let enableSaveButton = false;
   $: oldName = oldName ?? task?.name;
   $: oldDescription = oldDescription ?? task?.description;
+
+  $: dueDate = task?.dueDate;
   $: status = task?.status;
-  $: status, updateTask();
+  $: assignee = task?.assignedTo;
+  $: dueDate, status, assignee, updateTask();
+
   $: enableSaveButton =
     task?.name != oldName || task?.description != oldDescription;
 
@@ -36,23 +43,27 @@
   async function updateTask() {
     console.log("update task");
     if (!task) return;
+    // update oldName and oldDescription for future comparing
     oldName = task.name;
     oldDescription = task.description;
+
     const { error } = await api.updateTask(task._id, task);
     if (error) {
       console.error(error);
     }
   }
+
+  async function deleteTask() {
+    console.log("update task");
+  }
 </script>
 
-{#if !task || !project}
-  <!-- <div>Loading</div> -->
-{:else}
+{#if task && project}
   <div class="min-h-full flex-1 flex flex-col" in:fade>
     <div class="flex-1 flex">
       <div class="flex-1 p-8">
         <div class="space-y-4 border-b pb-8">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
             <div class="flex items-center gap-1">
               <a
                 href={`/projects/${project?._id}`}
@@ -62,30 +73,16 @@
               /
               <button class="flex items-center gap-1">
                 <div>{task._id}</div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide lucide-link"
-                  ><path
-                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-                  /><path
-                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-                  /></svg
-                >
+                <LinkIcon />
               </button>
             </div>
+            <div class="flex-1"></div>
             <button
               class={`${enableSaveButton ? "" : "text-gray-400"}`}
               disabled={!enableSaveButton}
               on:click={updateTask}>Save</button
             >
+            <button on:click={deleteTask}>Delete</button>
           </div>
           <div class="space-y-2">
             <h1
@@ -134,8 +131,10 @@
             ]}
           />
           <SelectAssignee
-            users={[{ username: "ducnh" }, { username: "john" }]}
+            bind:assignee={task.assignedTo}
+            users={[...project?.members, project?.manager]}
           />
+          <SelectDate bind:value={task.dueDate} label="Due date" />
         </div>
       </div>
     </div>
