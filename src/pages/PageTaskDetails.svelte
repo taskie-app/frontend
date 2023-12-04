@@ -26,9 +26,9 @@
   $: dueDate = task?.dueDate;
   $: status = task?.status;
   $: assignee = task?.assignedTo?._id;
-  // $: dueDate, updateTask();
+  $: dueDate, updateTask();
   $: status, updateTask();
-  // $: assignee, updateTask();
+  $: assignee, updateTask();
 
   $: enableSaveButton =
     task?.name != oldName || task?.description != oldDescription;

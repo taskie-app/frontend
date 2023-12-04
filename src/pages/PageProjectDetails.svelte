@@ -9,7 +9,7 @@
   import TaskList from "../components/TaskList.svelte";
   import Button from "../components/Button.svelte";
   import SearchIcon from "../icons/SearchIcon.svelte";
-  import { link } from "svelte-spa-router";
+  import { link, push } from "svelte-spa-router";
   import LinkIcon from "../icons/LinkIcon.svelte";
 
   export let params: { id: string };
@@ -126,6 +126,12 @@
             rounded
           />
         </div>
+        <Button
+          onClick={() => push(`/projects/${project._id}/settings`)}
+          preset="secondary"
+          label="Settings"
+          rounded
+        />
 
         <div class="flex-1"></div>
 

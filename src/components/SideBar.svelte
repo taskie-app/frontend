@@ -13,7 +13,7 @@
   </div>
   <div class="flex flex-1 flex-col p-4 gap-2">
     <SideBarLink href="/projects" label="Projects" />
-    <SideBarLink href="/tasks" label="My tasks" />
+    <SideBarLink href="/my-tasks" label="My tasks" />
     <div class="border-b my-4"></div>
     <p class="text-xs font-medium text-gray-400 px-2">YOUR PROJECTS</p>
 

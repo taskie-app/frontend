@@ -76,19 +76,20 @@ class Api {
     return { project, error };
   }
 
-  async getProjectDetails(id: string) {
+  async getProjectDetails(id: string): ApiResult<{ project: Project }> {
     const { data } = await this.axios.get(`/projects/${id}`);
-    return { data: data.data, error: data.error };
-  }
-
-  async getProjectTasks(id: string): ApiResult<{ tasks: Task[] }> {
-    const { data } = await this.axios.get(`/tasks?projectId=${id}`);
-    const { tasks, error } = data;
-    return { tasks, error };
+    const { project, error } = data;
+    return { project, error };
   }
 
   async updateProject(id: string, newData: Project) {
     const { data } = await this.axios.put(`/projects/${id}`, newData);
+    const { error } = data;
+    return { error };
+  }
+
+  async deleteProject(id: string) {
+    const { data } = await this.axios.delete(`/projects/${id}`);
     const { error } = data;
     return { error };
   }
@@ -113,6 +114,18 @@ class Api {
     const { data } = await this.axios.get(`/tasks/${taskId}`);
     const { task, error } = data;
     return { task, error };
+  }
+
+  async getProjectTasks(id: string): ApiResult<{ tasks: Task[] }> {
+    const { data } = await this.axios.get(`/tasks?projectId=${id}`);
+    const { tasks, error } = data;
+    return { tasks, error };
+  }
+
+  async getUserTasks(): ApiResult<{ tasks: Task[] }> {
+    const { data } = await this.axios.get(`/tasks`);
+    const { tasks, error } = data;
+    return { tasks, error };
   }
 
   async updateTask(taskId: string, newData: Task): ApiResult<{ task: Task }> {

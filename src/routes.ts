@@ -8,6 +8,8 @@ import PageSignUp from "./pages/PageSignUp.svelte";
 import PageTaskDetails from "./pages/PageTaskDetails.svelte";
 import { authenticated } from "./stores/authStore";
 import PageProfile from "./pages/PageProfile.svelte";
+import PageMyTasks from "./pages/PageMyTasks.svelte";
+import PageProjectSettings from "./pages/PageProjectSettings.svelte";
 
 const conditions = [() => get(authenticated)];
 
@@ -15,12 +17,20 @@ export const routes = {
   "/": PageHome,
   "/sign-in": PageSignIn,
   "/sign-up": PageSignUp,
+  "/my-tasks": wrap({
+    component: PageMyTasks,
+    conditions,
+  }),
   "/projects": wrap({
     component: PageListProjects,
     conditions,
   }),
   "/projects/:id": wrap({
     component: PageProjectDetails,
+    conditions,
+  }),
+  "/projects/:id/settings": wrap({
+    component: PageProjectSettings,
     conditions,
   }),
   "/tasks/:projectId/:taskId": wrap({
