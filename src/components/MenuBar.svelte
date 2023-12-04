@@ -23,15 +23,9 @@
       <div class="w-8 h-8 rounded-full bg-gray-200"></div>
     </div>
 
-    <div slot="content">Hello</div>
-  </PopupMenu>
-  <PopupMenu>
-    <div slot="trigger">
-      <div class="w-8 h-8 rounded-full bg-gray-200"></div>
+    <div slot="content" class="flex flex-col">
+      <button class="hover:bg-gray-100 text-left px-4 py-2">Profile</button>
+      <button class="hover:bg-gray-100 text-left px-4 py-2">Sign out</button>
     </div>
-
-    <div slot="content">Hello</div>
   </PopupMenu>
-  <!-- <button on:click={deleteAllProjects}>Delete all projects</button> -->
-  <button on:click={signOut}>Signout</button>
 </div>

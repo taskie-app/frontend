@@ -4,10 +4,11 @@
   import { api } from "../lib/api";
   import type { Task } from "../lib/types";
   import { projects } from "../stores/projectStore";
-  import SelectAssignee from "../components/SelectAssignee";
   import { fade } from "svelte/transition";
   import SelectDate from "../components/Select/SelectDate.svelte";
+  import SelectAssignee from "../components/Select/SelectAssignee.svelte";
   import LinkIcon from "../icons/LinkIcon.svelte";
+  import Button from "../components/Button.svelte";
 
   export let params: { projectId: string; taskId: string };
   $: project = $projects.find((project) => project._id == params.projectId);
@@ -24,8 +25,10 @@
 
   $: dueDate = task?.dueDate;
   $: status = task?.status;
-  $: assignee = task?.assignedTo;
-  $: dueDate, status, assignee, updateTask();
+  $: assignee = task?.assignedTo?._id;
+  // $: dueDate, updateTask();
+  $: status, updateTask();
+  // $: assignee, updateTask();
 
   $: enableSaveButton =
     task?.name != oldName || task?.description != oldDescription;
@@ -54,7 +57,7 @@
   }
 
   async function deleteTask() {
-    console.log("update task");
+    alert("Delete task");
   }
 </script>
 
@@ -77,12 +80,13 @@
               </button>
             </div>
             <div class="flex-1"></div>
-            <button
-              class={`${enableSaveButton ? "" : "text-gray-400"}`}
+            <Button
+              preset="secondary"
+              label="Save"
+              onClick={updateTask}
               disabled={!enableSaveButton}
-              on:click={updateTask}>Save</button
-            >
-            <button on:click={deleteTask}>Delete</button>
+            />
+            <Button preset="danger" label="Delete" onClick={deleteTask} />
           </div>
           <div class="space-y-2">
             <h1
