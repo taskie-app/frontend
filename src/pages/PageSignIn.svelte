@@ -1,12 +1,27 @@
 <script lang="ts">
-  import { link, push } from "svelte-spa-router";
+  import { onMount } from "svelte";
+  import { link, replace } from "svelte-spa-router";
+  import { authenticated } from "../stores/authStore";
+  import { api } from "../lib/api";
 
-  let email = "";
+  let username = "";
   let password = "";
 
-  const submit = () => {
-    push("/");
-  };
+  onMount(() => {
+    if ($authenticated) {
+      replace("/");
+    }
+  });
+
+  async function submit() {
+    const { error } = await api.signIn(username, password);
+    if (error) {
+      console.error(error);
+    } else {
+      $authenticated = true;
+      replace("/");
+    }
+  }
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center space-y-8">
@@ -14,15 +29,12 @@
 
   <div class="w-full max-w-sm space-y-4">
     <div class="space-y-1">
-      <label for="email" class="text-sm font-medium">Email address</label>
+      <label for="username" class="text-sm font-medium">Username</label>
       <input
-        bind:value={email}
-        id="email"
-        name="email"
-        type="email"
-        autocomplete="email"
+        bind:value={username}
+        type="text"
         required
-        placeholder="Email address"
+        placeholder="Username"
         class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
       />
     </div>
@@ -46,8 +58,6 @@
       <div>
         <input
           bind:value={password}
-          id="password"
-          name="password"
           type="password"
           autocomplete="current-password"
           required

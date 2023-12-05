@@ -1,7 +1,13 @@
 <script>
-  import { link } from "svelte-spa-router";
+  import ProjectItem from "../components/ProjectItem.svelte";
+  import { onMount } from "svelte";
+  import { authenticated } from "../stores/authStore";
+  import { replace } from "svelte-spa-router";
+  onMount(() => {
+    if (!$authenticated) {
+      replace("/sign-in");
+      return;
+    }
+    replace("/projects");
+  });
 </script>
-
-<div class="p-4">
-  <a href="/projects/1" use:link>Project 1</a>
-</div>
