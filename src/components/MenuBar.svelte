@@ -25,7 +25,9 @@
 
     <div slot="content" class="flex flex-col">
       <button class="hover:bg-gray-100 text-left px-4 py-2">Profile</button>
-      <button class="hover:bg-gray-100 text-left px-4 py-2">Sign out</button>
+      <button class="hover:bg-gray-100 text-left px-4 py-2" on:click={signOut}
+        >Sign out</button
+      >
     </div>
   </PopupMenu>
 </div>
