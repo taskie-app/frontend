@@ -8,7 +8,6 @@
   export let preset: "primary" | "secondary" | "danger";
   export let rounded = false;
   export let disabled = false;
-  $: console.log({ disabled });
   const baseClass =
     "inline-flex items-center justify-center border border-black/20 text-sm font-medium px-4 h-8 rounded";
   $: borderClass = rounded ? "rounded-full" : "";

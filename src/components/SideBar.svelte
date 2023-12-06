@@ -4,7 +4,7 @@
 </script>
 
 <div
-  class="flex flex-col w-64 h-screen sticky top-0 left-0 border-r bg-gray-50"
+  class="flex flex-col w-[240px] h-screen sticky top-0 left-0 border-r bg-gray-50"
 >
   <div class="h-16 border-b px-4 flex items-center">
     <div class="inline-block relative w-full">

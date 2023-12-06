@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { link } from "svelte-spa-router";
+  import { link, replace } from "svelte-spa-router";
   import Select from "../components/Select.svelte";
   import { api } from "../lib/api";
   import type { Task } from "../lib/types";
@@ -9,6 +9,7 @@
   import SelectAssignee from "../components/Select/SelectAssignee.svelte";
   import LinkIcon from "../icons/LinkIcon.svelte";
   import Button from "../components/Button.svelte";
+  import AlertDialog from "../components/AlertDialog.svelte";
 
   export let params: { projectId: string; taskId: string };
   $: project = $projects.find((project) => project._id == params.projectId);
@@ -33,6 +34,8 @@
   $: enableSaveButton =
     task?.name != oldName || task?.description != oldDescription;
 
+  let alertDialogVisible = false;
+
   async function fetchTask() {
     if (!taskId) return;
     const { task: fetchedTask, error } = await api.getTask(taskId);
@@ -56,8 +59,17 @@
     }
   }
 
+  function showDeleteDialog() {
+    alertDialogVisible = true;
+  }
+
   async function deleteTask() {
-    alert("Delete task");
+    const { error } = await api.deleteTask(task._id);
+    if (error) {
+      console.error(error);
+    } else {
+      replace(`/projects/${project?._id}`);
+    }
   }
 </script>
 
@@ -69,14 +81,13 @@
           <div class="flex items-center gap-2">
             <div class="flex items-center gap-1">
               <a
-                href={`/projects/${project?._id}`}
+                href={`/projects/${project._id}`}
                 use:link
-                class="text-gray-400 hover:text-gray-600">{project?.name}</a
+                class="text-gray-400 hover:text-gray-600">{project.name}</a
               >
               /
               <button class="flex items-center gap-1">
-                <div>{task._id}</div>
-                <LinkIcon />
+                <div>{task.name}</div>
               </button>
             </div>
             <div class="flex-1"></div>
@@ -86,7 +97,7 @@
               onClick={updateTask}
               disabled={!enableSaveButton}
             />
-            <Button preset="danger" label="Delete" onClick={deleteTask} />
+            <Button preset="danger" label="Delete" onClick={showDeleteDialog} />
           </div>
           <div class="space-y-2">
             <h1
@@ -132,6 +143,10 @@
                 value: "IN_PROGRESS",
                 text: "In progress",
               },
+              {
+                value: "DONE",
+                text: "Done",
+              },
             ]}
           />
           <SelectAssignee
@@ -144,3 +159,11 @@
     </div>
   </div>
 {/if}
+
+<AlertDialog
+  bind:visible={alertDialogVisible}
+  title="Delete task"
+  description="Are you sure you want to delete this task"
+  onConfirm={deleteTask}
+  confirmLabel="Delete"
+/>
