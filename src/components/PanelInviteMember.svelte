@@ -22,6 +22,7 @@
 
   function submit() {
     onMembersSelected(selectedMembers);
+    hide();
   }
 
   // Debounce function to delay API call
@@ -38,6 +39,7 @@
   }
   async function findUsers() {
     const { users, error } = await api.getUsers({ username });
+
     if (error) {
       console.error(error);
     } else {
@@ -48,6 +50,7 @@
   function addMember(u: User) {
     selectedMembers = [...selectedMembers, u];
     foundMemebersVisible = false;
+    username = "";
   }
   function removeMember(u: User) {
     const newMembers = selectedMembers.filter((m) => m._id != u._id);
