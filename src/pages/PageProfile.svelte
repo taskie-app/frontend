@@ -1,70 +1,82 @@
 <script lang="ts">
+  import Button from "../components/Button.svelte";
   import { api } from "../lib/api";
+  import { link } from "svelte-spa-router";
+  export let username: string = "ducnh";
+  export let password: string;
+  export let files;
+  export let fileInput: HTMLInputElement;
+  let avatarSrc = "default-avatar.jpg";
 
-  let username = "";
-  let password = "";
-  let avatar = null;
+  function previewAvatar(event) {
+    const input = event.target;
+    const reader = new FileReader();
 
-  async function registerUser() {
-    const formData = new FormData();
-    console.log(formData);
+    reader.onload = function () {
+      avatarSrc = reader.result;
+    };
 
-    formData.append("username", username);
-    formData.append("password", password);
-    formData.append("avatar", avatar[0]);
-
-    await api.updateUser("1", formData);
+    if (input.files && input.files[0]) {
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+  function chooseAvatar() {
+    fileInput.click();
   }
 </script>
 
-<main>
-  <h1>User Registration</h1>
-  <form>
-    <label for="username">Username:</label>
-    <input type="text" id="username" bind:value={username} required />
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" bind:value={password} required />
-
-    <label for="avatar">Avatar:</label>
+<div class="mx-auto w-full max-w-sm space-y-4 pt-8">
+  <div class="mx-auto">
+    <button on:click={chooseAvatar} class="hover:brightness-75">
+      <img
+        id="avatar-preview"
+        src={avatarSrc}
+        class="aspect-square rounded-full w-40 h-40 object-cover mx-auto"
+        alt=""
+      />
+    </button>
+  </div>
+  <input
+    bind:this={fileInput}
+    type="file"
+    id="avatar-input"
+    accept="image/*"
+    on:change={previewAvatar}
+    class="hidden"
+  />
+  <div>
+    <label for="name" class="text-sm font-medium">Name</label>
     <input
-      type="file"
-      id="avatar"
-      bind:files={avatar}
-      accept="image/*"
+      name="name"
       required
+      placeholder="Name"
+      class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
     />
+  </div>
 
-    <button type="button" on:click={registerUser}>Register</button>
-  </form>
-</main>
+  <div>
+    <label for="name" class="text-sm font-medium">Username</label>
+    <input
+      name="name"
+      required
+      placeholder="Name"
+      class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
+    />
+  </div>
 
-<style>
-  main {
-    text-align: center;
-    margin: 2rem;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 300px;
-    margin: 0 auto;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  input {
-    padding: 0.5rem;
-  }
-
-  button {
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-</style>
+  <div>
+    <label for="name" class="text-sm font-medium">Change password</label>
+    <input
+      name="name"
+      required
+      placeholder="Old password"
+      class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
+    />
+    <input
+      name="name"
+      required
+      placeholder="New password"
+      class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
+    />
+  </div>
+</div>

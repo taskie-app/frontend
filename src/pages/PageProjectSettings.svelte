@@ -3,16 +3,19 @@
   import type { Project, Task, User } from "../lib/types";
   import { api } from "../lib/api";
   import Button from "../components/Button.svelte";
-  import { link } from "svelte-spa-router";
+  import { link, replace } from "svelte-spa-router";
   import { fade } from "svelte/transition";
+  import TrashIcon from "../icons/TrashIcon.svelte";
+  import AlertDialog from "../components/AlertDialog.svelte";
+  import { fetchProjects, projects } from "../stores/projectStore";
 
   export let params: { id: string };
 
   let project: Project;
   $: params, fetchProject();
-  let tasks: Task[] = [];
-  $: project, project?._id && fetchTasks();
+
   let inviteMemberPanelVisible = false;
+  let deleteProjectDialogVisible = false;
 
   async function fetchProject() {
     const { id } = params;
@@ -20,17 +23,6 @@
     const { project: fetchedProject, error } = await api.getProjectDetails(id);
     if (error) return console.error(error);
     project = fetchedProject;
-  }
-
-  async function fetchTasks() {
-    const { tasks: fetchedTasks, error } = await api.getProjectTasks(
-      project._id
-    );
-    if (error) {
-      console.error(error);
-    } else {
-      tasks = fetchedTasks;
-    }
   }
 
   function addMembers(members: User[]) {
@@ -51,18 +43,30 @@
     updateProject();
   }
 
-  function updateProject() {
-    api
-      .updateProject(project._id, project)
-      .then()
-      .catch((error) => console.error(error));
+  async function updateProject() {
+    const { project: updatedProject, error } = await api.updateProject(
+      project._id,
+      project
+    );
+    if (error) {
+      console.error(error);
+    } else {
+      fetchProjects();
+    }
   }
 
-  function deleteProject() {
-    api
-      .deleteProject(project._id)
-      .then()
-      .catch((error) => console.error(error));
+  function promptDelete() {
+    deleteProjectDialogVisible = true;
+  }
+
+  async function deleteProject() {
+    const { error } = await api.deleteProject(project._id);
+    if (error) {
+      console.error(error);
+    } else {
+      replace("/projects");
+      fetchProjects();
+    }
   }
 </script>
 
@@ -90,11 +94,19 @@
       </div>
       <!-- Name and description -->
       <div class="space-y-2">
-        <h1 class="text-3xl font-medium">{project?.name}</h1>
-        <h1 class="text-xl text-gray-400">{project?.description}</h1>
+        <h1
+          class="text-3xl font-medium"
+          contenteditable="plaintext-only"
+          bind:textContent={project.name}
+        ></h1>
+        <h1
+          class="text-xl text-gray-400"
+          contenteditable="plaintext-only"
+          bind:textContent={project.description}
+        ></h1>
       </div>
 
-      <div class="space-y-1">
+      <div class="space-y-2">
         <div class="text-2xl">Manager</div>
         <div
           class="inline-flex items-center w-96 bg-gray-50 border rounded px-4 h-10 hover:bg-gray-100 text-left"
@@ -102,18 +114,30 @@
           {project.manager.username}
         </div>
       </div>
-      <div class="space-y-1">
-        <div class="text-2xl">Members</div>
-        <div
-          class="inline-flex flex-col items-center w-96 bg-gray-50 border rounded px-4 h-10 hover:bg-gray-100 text-left"
-        >
-          {#each project.members as member}
-            <div class="">{member.username}</div>
-          {/each}
+      <div class="space-y-2">
+        <div class="flex items-center justify-between w-96">
+          <div class="text-2xl">Members</div>
+          <Button
+            preset="primary"
+            label="Invite"
+            onClick={() => (inviteMemberPanelVisible = true)}
+          />
         </div>
+        {#each project.members as member}
+          <div
+            class="flex items-center justify-between w-96 h-10 bg-gray-50 border rounded px-4 hover:bg-gray-100 text-left"
+          >
+            {member.username}
+            <button class="text-red-500" on:click={() => removeMember(member)}>
+              <TrashIcon />
+            </button>
+          </div>
+        {/each}
       </div>
-
-      <Button preset="danger" label="Delete project" onClick={deleteProject} />
+      <div class="pt-4">
+        <Button preset="secondary" label="Save" onClick={updateProject} />
+        <Button preset="danger" label="Delete" onClick={promptDelete} />
+      </div>
     </div>
   </div>
 
@@ -121,5 +145,13 @@
     bind:visible={inviteMemberPanelVisible}
     {project}
     onMembersSelected={addMembers}
+  />
+
+  <AlertDialog
+    bind:visible={deleteProjectDialogVisible}
+    title="Delete project"
+    description="Are you sure you want to delete this project?"
+    confirmLabel="Delete"
+    onConfirm={deleteProject}
   />
 {/if}
