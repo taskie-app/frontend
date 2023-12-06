@@ -1,9 +1,12 @@
 <script>
-  import { replace } from "svelte-spa-router";
+  import { push, replace } from "svelte-spa-router";
   import { api } from "../lib/api";
   import { authenticated } from "../stores/authStore";
   import { deleteAllProjects } from "../stores/projectStore";
   import PopupMenu from "./PopupMenu.svelte";
+  function viewProfile() {
+    push("/profile");
+  }
   async function signOut() {
     const { error } = await api.signOut();
     if (error) {
@@ -24,7 +27,10 @@
     </div>
 
     <div slot="content" class="flex flex-col">
-      <button class="hover:bg-gray-100 text-left px-4 py-2">Profile</button>
+      <button
+        class="hover:bg-gray-100 text-left px-4 py-2"
+        on:click={viewProfile}>Profile</button
+      >
       <button class="hover:bg-gray-100 text-left px-4 py-2" on:click={signOut}
         >Sign out</button
       >

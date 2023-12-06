@@ -82,10 +82,13 @@ class Api {
     return { project, error };
   }
 
-  async updateProject(id: string, newData: Project) {
+  async updateProject(
+    id: string,
+    newData: Project
+  ): ApiResult<{ project: Project }> {
     const { data } = await this.axios.put(`/projects/${id}`, newData);
-    const { error } = data;
-    return { error };
+    const { project, error } = data;
+    return { project, error };
   }
 
   async deleteProject(id: string) {
@@ -132,6 +135,12 @@ class Api {
     const { data } = await this.axios.put(`/tasks/${taskId}`, newData);
     const { task, error } = data;
     return { task, error };
+  }
+
+  async deleteTask(taskId: string) {
+    const { data } = await this.axios.delete(`/tasks/${taskId}`);
+    const { error } = data;
+    return { error };
   }
 }
 
