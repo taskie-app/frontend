@@ -26,17 +26,7 @@
 {#if $initializing}
   <div>Loading</div>
 {:else}
-  <div class="h-screen flex flex-col text-gray-800">
-    <div class="flex-1 flex">
-      {#if $authenticated}
-        <SideBar />
-      {/if}
-      <div class="flex-1">
-        {#if $authenticated}
-          <MenuBar />
-        {/if}
-        <Router {routes} on:conditionsFailed={handleRouteFailure} />
-      </div>
-    </div>
+  <div class="min-h-screen max-w-full text-gray-800 bg-slate-50">
+    <Router {routes} on:conditionsFailed={handleRouteFailure} />
   </div>
 {/if}
