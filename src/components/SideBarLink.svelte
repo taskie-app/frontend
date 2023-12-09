@@ -11,10 +11,9 @@
   use:link
   use:active={{
     className:
-      "text-brand-500 bg-brand-50 border-r border-brand-500 border-r-2",
+      "text-brand-500 font-medium bg-brand-50 border-r border-brand-500 border-r-2",
   }}
-  class="flex items-center gap-1 px-4 py-4 hover:bg-gray-200"
+  class="flex items-center gap-1 px-4 py-4 hover:bg-gray-100"
 >
-  <!-- <FolderIcon class="w-4" /> -->
-  <div class="text-gray-600">{label}</div>
+  <div>{label}</div>
 </a>

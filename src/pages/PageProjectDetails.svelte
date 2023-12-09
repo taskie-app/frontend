@@ -1,88 +1,49 @@
 <script lang="ts">
-  import MemberItem from "../components/MemberItem.svelte";
-  import PanelInviteMember from "../components/PanelInviteMember.svelte";
-  import PanelCreateTask from "../components/PanelCreateTask.svelte";
-  import TaskBoard from "../components/TaskBoard.svelte";
+  import type { Task } from "../lib/types";
   import { projects } from "../stores/projectStore";
-  import type { Task, User } from "../lib/types";
   import { api } from "../lib/api";
-  import TaskList from "../components/TaskList.svelte";
-  import Button from "../components/Button.svelte";
-  import SearchIcon from "../icons/SearchIcon.svelte";
-  import { link, push } from "svelte-spa-router";
-  import LinkIcon from "../icons/LinkIcon.svelte";
   import SideBar from "../components/SideBar.svelte";
   import MenuBar from "../components/MenuBar.svelte";
+  import PanelInviteMember from "../components/PanelInviteMember.svelte";
+  import PanelCreateTask from "../components/PanelCreateTask.svelte";
+  import PanelTaskDetails from "../components/PanelTaskDetails.svelte";
+  import TabButton from "../components/TabButton.svelte";
+  import TaskList from "../components/TaskList.svelte";
+  import TaskBoard from "../components/TaskBoard.svelte";
+  import ProjectSettings from "../components/ProjectSettings.svelte";
+
+  enum Tab {
+    TASKS,
+    KANBAN,
+    SETTINGS,
+  }
 
   export let params: { id: string };
 
-  let tasks: Task[] = [];
-  let tasksDisplayMode: "BOARD" | "LIST" = "BOARD";
-  let taskNameSearch = "";
-  let inviteMemberPanelVisible = false;
-  let createTaskPanelVisible = false;
-  $: filterdTasks = tasks.filter((t) =>
-    t.name.toLowerCase().includes(taskNameSearch.trim().toLowerCase())
-  );
+  let panelCreateTask: any;
+  let panelInviteMember: any;
+  let panelTaskDetails: any;
 
-  // on params change, update the project
+  // on params change, get the project
   $: project = $projects.filter((project) => project._id == params.id)[0];
   // on project change, fetchTasks
   $: project && fetchTasks();
+
+  let tasks: Task[] = [];
+  let tab: Tab = Tab.TASKS;
+
+  $: filterdTasks = tasks.filter((t) => true);
 
   async function fetchTasks() {
     const { tasks: fetchedTasks, error } = await api.getProjectTasks(
       project._id
     );
-    if (error) {
-      console.error(error);
-    } else {
-      tasks = fetchedTasks;
-    }
+    if (error) return console.error(error);
+    tasks = fetchedTasks;
   }
 
-  function addTask(task: Task) {
-    tasks = [...tasks, task];
-  }
-
-  async function changeTaskStatus(
-    taskId: Task["_id"],
-    newStatus: Task["status"]
-  ) {
-    // change the tasks state for instant feedback
-    tasks = tasks.map((task) =>
-      task._id == taskId ? { ...task, status: newStatus } : task
-    );
-
-    // @ts-ignore
-    const { error } = await api.updateTask(taskId, { status: newStatus });
-    if (error) {
-      console.error(error);
-    }
-  }
-
-  function changeTasksDisplayMode(newMode: "BOARD" | "LIST") {
-    tasksDisplayMode = newMode;
-  }
-
-  async function addMembers(members: User[]) {
-    const newProject = {
-      ...project,
-      members: [...project.members, ...members],
-    };
-
-    $projects = $projects.map((p) => {
-      if (p._id == newProject._id) {
-        return newProject;
-      } else {
-        return p;
-      }
-    });
-
-    api
-      .updateProject(newProject._id, newProject)
-      .then()
-      .catch((error) => console.error(error));
+  function viewTaskDetails(t: Task) {
+    panelTaskDetails?.show(t);
   }
 </script>
 
@@ -91,110 +52,60 @@
     <SideBar />
     <div class="flex-1">
       <MenuBar title={`Projects / ${project.name}`} />
-      <div class="p-8">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-1">
-            <a
-              href={`/projects/`}
-              use:link
-              class="text-gray-400 hover:text-gray-600">Projects</a
-            >
-            /
-            <button class="flex items-center gap-1">
-              <div>{project?.name}</div>
-            </button>
-          </div>
-        </div>
-        <!-- Name and description -->
-        <div class="space-y-2">
-          <h1 class="text-3xl font-medium">{project?.name}</h1>
-          <h1 class="text-xl text-gray-400">{project?.description}</h1>
-        </div>
-
-        <!-- Tools row -->
-        <div class="flex items-center gap-2">
-          <!-- Manage members -->
-          <div class="flex items-center">
-            <div class="flex -space-x-2">
-              <MemberItem member={project?.manager} />
-              {#each project?.members as member}
-                <MemberItem {member} />
-              {/each}
-            </div>
-            <Button
-              onClick={() => (inviteMemberPanelVisible = true)}
-              preset="secondary"
-              label="Invite"
-              rounded
+      <div class="px-8 pt-8">
+        <div class="text-3xl font-medium">{project.name}</div>
+        <div class="text-lg text-gray-400">{project.description}</div>
+        <div class="flex items-center justify-between my-4">
+          <div class="flex gap-4">
+            <TabButton bind:currentTab={tab} value={Tab.TASKS} label="TASKS" />
+            <TabButton
+              bind:currentTab={tab}
+              value={Tab.KANBAN}
+              label="KANBAN"
+            />
+            <TabButton
+              bind:currentTab={tab}
+              value={Tab.SETTINGS}
+              label="SETTINGS"
             />
           </div>
-          <Button
-            onClick={() => push(`/projects/${project._id}/settings`)}
-            preset="secondary"
-            label="Settings"
-            rounded
-          />
-
-          <div class="flex-1"></div>
-
-          <!-- Manage tasks -->
-          <div
-            class="flex items-center bg-white border border-black/20 rounded h-8 px-1"
-          >
-            <button
-              class:bg-gray-100={tasksDisplayMode == "LIST"}
-              class:text-gray-500={tasksDisplayMode != "LIST"}
-              class="px-4 h-6 rounded text-sm font-medium"
-              on:click={() => changeTasksDisplayMode("LIST")}>List</button
-            >
-            <button
-              class:bg-gray-100={tasksDisplayMode == "BOARD"}
-              class:text-gray-500={tasksDisplayMode != "BOARD"}
-              class="px-4 h-6 rounded text-sm font-medium"
-              on:click={() => changeTasksDisplayMode("BOARD")}>Board</button
-            >
+          <div class="flex items-center -space-x-2">
+            {#each [1, 2, 3] as member}
+              <div
+                class="w-10 h-10 rounded-full bg-gray-200 border-2 border-white"
+              ></div>
+            {/each}
           </div>
-          <div
-            class="border border-black/20 rounded overflow-hidden flex items-center px-2 h-8 gap-1"
-          >
-            <SearchIcon />
-            <input
-              type="text"
-              class="border-none outline-none focus:ring-0 px-0 text-sm"
-              placeholder="Search for task..."
-              bind:value={taskNameSearch}
-            />
-          </div>
-          <Button
-            preset="primary"
-            label="New task"
-            onClick={() => {
-              createTaskPanelVisible = true;
-            }}
-          />
         </div>
 
-        {#if tasksDisplayMode == "BOARD"}
-          <TaskBoard
+        {#if tab == Tab.TASKS}
+          <TaskList
             {project}
-            tasks={filterdTasks}
-            onTaskDropped={changeTaskStatus}
+            bind:tasks
+            onTaskSelected={viewTaskDetails}
+            onCreateTaskClick={() => panelCreateTask?.show()}
           />
-        {:else}
-          <TaskList {project} {tasks} />
+        {/if}
+
+        {#if tab == Tab.KANBAN}
+          <TaskBoard {project} bind:tasks onTaskSelected={viewTaskDetails} />
+        {/if}
+
+        {#if tab == Tab.SETTINGS}
+          <ProjectSettings
+            bind:project
+            onInviteMemberClicked={() => panelInviteMember?.show()}
+          />
         {/if}
       </div>
     </div>
   </div>
 
   <PanelInviteMember
-    bind:visible={inviteMemberPanelVisible}
+    bind:this={panelInviteMember}
+    bind:members={project.members}
     {project}
-    onMembersSelected={addMembers}
   />
-  <PanelCreateTask
-    bind:visible={createTaskPanelVisible}
-    {project}
-    onTaskCreated={addTask}
-  />
+  <PanelCreateTask bind:this={panelCreateTask} bind:tasks {project} />
+  <PanelTaskDetails bind:this={panelTaskDetails} bind:tasks {project} />
 {/if}

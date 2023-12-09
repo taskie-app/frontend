@@ -43,7 +43,7 @@
   }
 </script>
 
-<div class="w-full h-full flex items-center justify-center bg-slate-50">
+<div class="w-full min-h-screen flex items-center justify-center bg-slate-50">
   <div
     class="bg-white rounded shadow-lg w-full max-w-md flex flex-col items-center py-8 gap-4"
   >

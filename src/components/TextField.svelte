@@ -6,7 +6,7 @@
 </script>
 
 <div class="space-y-1 w-full">
-  <div class="text-sm">{label}</div>
+  <div class="text-sm font-medium">{label}</div>
   <input
     class:border-red-500={error}
     class="rounded text-md px-4 py-2 border-gray-300 w-full"
