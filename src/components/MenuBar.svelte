@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
   import { push, replace } from "svelte-spa-router";
   import { api } from "../lib/api";
   import { authenticated } from "../stores/authStore";
   import { deleteAllProjects } from "../stores/projectStore";
   import PopupMenu from "./PopupMenu.svelte";
+
+  export let title: string;
+
   function viewProfile() {
     push("/profile");
   }
@@ -19,8 +22,9 @@
 </script>
 
 <div
-  class="h-16 flex items-center justify-end px-4 gap-2 border-b sticky top-0 left-0 bg-white"
+  class="h-16 flex items-center justify-between px-4 gap-2 border-b bg-white"
 >
+  <div class="px-4 font-medium">{title}</div>
   <PopupMenu>
     <div slot="trigger">
       <div class="w-8 h-8 rounded-full bg-gray-200"></div>

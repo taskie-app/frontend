@@ -2,22 +2,37 @@
   import { link } from "svelte-spa-router";
   import { draggable } from "../lib/dnd";
   import type { Project, Task } from "../lib/types";
+  import { RiCalendarLine, RiUser3Line } from "svelte-remixicon";
 
   export let project: Project;
   export let task: Task;
+  export let onTaskSelected: (task: Task) => void;
 </script>
 
-<a href={`/tasks/${project._id}/${task._id}`} use:link use:draggable={task._id}>
-  <div class="border rounded bg-white p-4 space-y-8">
+<button
+  use:draggable={task._id}
+  on:click={() => onTaskSelected(task)}
+  class="text-left"
+>
+  <div class="border rounded bg-white p-4 space-y-8 overflow-hidden">
     <div>
       <h1 class="text-xl font-medium">{task.name}</h1>
       <p class="text-gray-400">{task.description}</p>
     </div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center text-gray-400 space-x-1">
+        <RiUser3Line size="16px" />
+        <div>
+          {task.assignedTo?.username ?? "Unassigned"}
+        </div>
+      </div>
 
-    <div
-      class="inline-flex items-center text-sm ml-auto px-3 h-6 rounded-full text-gray-600 bg-gray-100"
-    >
-      {task.assignedTo?.username ?? "Unassigned"}
+      <div class="flex items-center text-gray-400 space-x-1">
+        <RiCalendarLine size="16px" />
+        <div>
+          {task.dueDate ?? "No due date"}
+        </div>
+      </div>
     </div>
   </div>
-</a>
+</button>

@@ -178,6 +178,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@rgossiaux/svelte-heroicons@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@rgossiaux/svelte-heroicons/-/svelte-heroicons-0.1.2.tgz#4c9f5d438716b9e7ba968c8b1937bf3e326be14d"
+  integrity sha512-c5Ep1QDvBo9HD/P0AxbXItDbn6x77fldCjjL0aBjNseUntV4fkdHkBde1IaLr8i0kmrhTSovjkIen8W83jUPzg==
+
 "@rollup/rollup-android-arm-eabi@4.5.2":
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.5.2.tgz#fa3e9ba323449f098b8d144ecaa4f044d2ff2ee3"
@@ -1134,6 +1139,11 @@ svelte-preprocess@^5.1.0:
     magic-string "^0.27.0"
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
+
+svelte-remixicon@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-remixicon/-/svelte-remixicon-2.1.0.tgz#45c8330d5ed4b1b06d0e16a51e4160c360b87bc3"
+  integrity sha512-mK0DptHHBjSNCDB8nbT5wS23CyGula6I5RF2UDmyxwGm7BKcKABDnRJ9n+qd0ocpKIMqWWal1U6CUtq8VIdwjg==
 
 svelte-spa-router@^3.3.0:
   version "3.3.0"

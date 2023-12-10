@@ -103,12 +103,8 @@ class Api {
     return { error };
   }
 
-  async createTask(projectId: string, name: string, description: string) {
-    const { data } = await this.axios.post("/tasks/", {
-      projectId,
-      name,
-      description,
-    });
+  async createTask(t: Task) {
+    const { data } = await this.axios.post("/tasks/", t);
     const { task, error } = data;
     return { task, error };
   }

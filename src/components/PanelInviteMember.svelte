@@ -7,10 +7,10 @@
   import CloseIcon from "../icons/CloseIcon.svelte";
   import { projects } from "../stores/projectStore";
 
-  export let visible: boolean;
   export let project: Project;
-  export let onMembersSelected: (members: User[]) => void;
+  export let members: User[];
 
+  let visible: boolean;
   let username = "";
   let selectedMembers: User[] = [];
   let foundMembers: User[] = []; // find when email change;
@@ -20,8 +20,28 @@
     visible = false;
   }
 
+  export function show() {
+    visible = true;
+  }
+
   function submit() {
-    onMembersSelected(selectedMembers);
+    const newProject = {
+      ...project,
+      members: [...project.members, ...members],
+    };
+
+    $projects = $projects.map((p) => {
+      if (p._id == newProject._id) {
+        return newProject;
+      } else {
+        return p;
+      }
+    });
+
+    api
+      .updateProject(newProject._id, newProject)
+      .then()
+      .catch((error) => console.error(error));
     hide();
   }
 
@@ -29,6 +49,7 @@
   function debounce(func: any, delay: number) {
     let timeoutId: number;
     return function () {
+      // @ts-ignore
       const context = this;
       const args = arguments;
       clearTimeout(timeoutId);

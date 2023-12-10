@@ -1,43 +1,56 @@
 <script lang="ts">
   import { api } from "../lib/api";
+  import Button from "./Button.svelte";
   import { clickOutside } from "../actions/clickOutside";
-  import type { Project, Task } from "../lib/types";
   import { RiCloseCircleLine, RiUploadCloudLine } from "svelte-remixicon";
   import TextField from "./TextField.svelte";
-  import Button from "./Button.svelte";
+  import type { Project, Task } from "../lib/types";
 
   export let project: Project;
   export let tasks: Task[];
 
   let visible: boolean;
-  // @ts-ignore
-  let task: Task = {
-    projectId: project._id,
-    name: "",
-    description: "",
-    status: "TODO",
-  };
+  let task: Task;
 
   export function hide() {
     visible = false;
   }
 
-  export function show() {
+  export function show(t: Task) {
+    task = t;
     visible = true;
   }
 
-  async function createTask() {
-    // update states
-    tasks = [...tasks, task];
+  async function updateTask() {
+    // update state
+    tasks = tasks.map((t) => (t._id == task._id ? task : t));
 
-    // update tasks in db
-    const { error } = await api.createTask(task);
+    // update db
+    const { error } = await api.updateTask(task._id, task);
+    if (error) {
+      // alert error
+      return;
+    }
+    hide();
+  }
+
+  async function deleteTask() {
+    if (!confirm("Are you sure you want to delete this task?")) {
+      return;
+    }
+    // update state
+    tasks = tasks.filter((t) => t._id != task._id);
+
+    // update db
+    const { error } = await api.deleteTask(task._id);
+
     if (error) return console.error(error);
+
     hide();
   }
 </script>
 
-{#if visible}
+{#if visible && task}
   <div
     class="absolute top-0 left-0 w-screen h-screen flex bg-black/50 items-center justify-center"
   >
@@ -64,13 +77,13 @@
           <TextField
             label="Name"
             bind:value={task.name}
-            placeholder="Enter task name"
+            placeholder="Enter project name"
             error={""}
           />
           <TextField
             label="Description"
             bind:value={task.description}
-            placeholder="Enter task description"
+            placeholder="Enter project description"
             error={""}
           />
         </div>
@@ -91,7 +104,7 @@
           <div class="space-y-2">
             <div class="text-sm font-medium text-gray-400">ASSIGNEE</div>
             <select
-              value={task.assignedTo?._id}
+              value={task.assignedTo?.username ?? ""}
               class="border rounded border-gray-300 w-full text-sm font-medium bg-white outline-none focus:ring-0"
             >
               <option value="">No assignee</option>
@@ -112,8 +125,8 @@
         </div>
       </div>
       <div class="flex items-center justify-between p-4">
-        <Button preset="secondary" label="Cancel" onClick={hide} />
-        <Button preset="primary" label="Create" onClick={createTask} />
+        <Button preset="secondary" label="Save" onClick={updateTask} />
+        <Button preset="danger" label="Delete" onClick={deleteTask} />
       </div>
     </div>
   </div>
