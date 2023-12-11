@@ -17,4 +17,4 @@ declare namespace svelteHTML {
   }
 }
 
-declare module "svelte-quill";
+declare module "quill";

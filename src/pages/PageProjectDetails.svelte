@@ -91,7 +91,7 @@
             {project}
             bind:tasks
             onTaskSelected={viewTaskDetails}
-            onCreateTaskClick={() => panelCreateTask?.show()}
+            onCreateTaskClicked={() => panelCreateTask?.show()}
           />
         {/if}
 

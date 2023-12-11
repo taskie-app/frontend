@@ -7,6 +7,7 @@
   import { api } from "../lib/api";
   import { link, replace } from "svelte-spa-router";
   import TextEditor from "./TextEditor.svelte";
+  import Select from "./Select/Select.svelte";
 
   export let project: Project;
   export let onInviteMemberClicked: () => void;
@@ -48,9 +49,19 @@
     placeholder="Enter project name"
     error=""
   />
-  <div class="font-medium mt-4 mb-1">Description</div>
+  <div class="text-sm font-medium mt-4 mb-1">Description</div>
   <div>
     <TextEditor />
+  </div>
+  <div class="mt-4">
+    <Select
+      value="Marketing"
+      options={[
+        { value: "Marketing", label: "Marketing" },
+        { value: "Software development", label: "Software development" },
+      ]}
+      label="Category"
+    />
   </div>
 
   <div class="mt-4">
@@ -59,7 +70,7 @@
 
   <div class="text-lg font-medium mt-4 mb-1">Danger</div>
   <div
-    class="flex items-center justify-between border border-red-500 rounded px-4 py-2"
+    class="flex items-center justify-between border border-red-500 rounded-sm px-4 py-2"
   >
     <div>
       <div class="font-medium">Delete this project</div>
@@ -102,8 +113,4 @@
       </div>
     {/each}
   </div> -->
-
-  <div class="flex items-center justify-end gap-4 mt-4">
-    <Button preset="secondary" label="Save" onClick={updateProject} />
-  </div>
 </div>

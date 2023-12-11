@@ -10,7 +10,7 @@
 
   export let priority: Task["priority"];
 
-  $: label = "HIGH";
+  $: label = priority;
 
   let expanded = false;
 

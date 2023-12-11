@@ -13,7 +13,7 @@
 
   export let project: Project;
   export let tasks: Task[] = [];
-  export let onCreateTaskClick: () => void;
+  export let onCreateTaskClicked: () => void;
   export let onTaskSelected: (task: Task) => void;
 
   const sortFunctions = {
@@ -33,16 +33,16 @@
 
   let sort: keyof typeof sortFunctions;
   let nameFilter: string;
-  let statusFilter: string;
+  let priorityFilter: string;
   let assigneeFilter: User | null;
   $: assigneeOptions = project.members.map((m) => m.username);
   $: filteredTasks = tasks.filter((t) => {
     const satisfiedName =
       !nameFilter || t.name.toLowerCase().includes(nameFilter.toLowerCase());
-    const satisfiedStatus = !statusFilter || t.status == statusFilter;
+    const satisfiedPriority = !priorityFilter || t.priority == priorityFilter;
     const satisfiedAssignee =
       !assigneeFilter || t.assignedTo?._id == assigneeFilter._id;
-    return satisfiedName && satisfiedAssignee && satisfiedStatus;
+    return satisfiedName && satisfiedAssignee && satisfiedPriority;
   });
   $: filteredAndSortedTasks = filteredTasks.sort(sortFunctions[sort]);
 </script>
@@ -97,23 +97,23 @@
 
   <div class="flex items-center">
     <RiCheckboxMultipleLine class="text-gray-400" size="18px" />
-    <div class="text-sm font-medium text-gray-400 ml-1">STATUS</div>
+    <div class="text-sm font-medium text-gray-400 ml-1">PRIORITY</div>
     <button class="text-sm font-medium flex items-center">
       <select
-        bind:value={statusFilter}
+        bind:value={priorityFilter}
         class="border-none bg-transparent outline-none focus:ring-0"
       >
         <option value="">All</option>
-        <option value="TODO">Todo</option>
-        <option value="IN_PROGRESS">In progress</option>
-        <option value="DONE">Done</option>
+        <option value="HIGH">High</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LOW">Low</option>
       </select>
     </button>
   </div>
 
   <div class="flex-1"></div>
 
-  <Button preset="primary" label="Add task" />
+  <Button preset="primary" label="Add task" onClick={onCreateTaskClicked} />
 </div>
 <div class="bg-white rounded border mt-4">
   {#each filteredAndSortedTasks as task}

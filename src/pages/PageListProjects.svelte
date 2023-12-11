@@ -8,6 +8,7 @@
   import MenuBar from "../components/MenuBar.svelte";
   import ListProjectsToolbar from "../components/ListProjectsToolbar.svelte";
   import type { Project } from "../lib/types";
+  import PageLayout from "../components/PageLayout.svelte";
 
   const sortFunctions = {
     name: (p1: Project, p2: Project) => (p1.name > p2.name ? 1 : -1),
@@ -25,17 +26,18 @@
   });
 </script>
 
-<div class="flex relative">
+<PageLayout>
   <SideBar />
   <div class="flex flex-col flex-1">
-    <MenuBar title="Projects" />
+    <MenuBar title="" />
+    <div class="text-3xl font-semibold px-8 mt-4">Projects</div>
     <ListProjectsToolbar
       bind:sort
       bind:filter
       bind:displayMode
       onCreateProjectClick={() => createProjectPanel?.show()}
     />
-    <div class="h-full">
+    <div class="">
       {#if displayMode == "LIST"}
         <ul>
           {#each $projects as project}
@@ -46,7 +48,7 @@
         </ul>
       {:else}
         <ul
-          class="px-8 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+          class="px-8 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4"
         >
           {#each $projects as project}
             <li class="list-none">
@@ -57,6 +59,6 @@
       {/if}
     </div>
   </div>
-</div>
+</PageLayout>
 
 <PanelCreateProject bind:this={createProjectPanel} />

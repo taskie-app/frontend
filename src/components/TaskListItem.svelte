@@ -36,7 +36,7 @@
 
   <div class="col-span-3">
     <div class="block overflow-hidden text-ellipsis max-w-full text-gray-400">
-      {task.description}
+      {task.description?.text}
     </div>
   </div>
 

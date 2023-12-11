@@ -103,7 +103,7 @@ class Api {
     return { error };
   }
 
-  async createTask(t: Task) {
+  async createTask(t: Omit<Task, "_id">) {
     const { data } = await this.axios.post("/tasks/", t);
     const { task, error } = data;
     return { task, error };
