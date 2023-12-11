@@ -29,7 +29,7 @@
   };
 
   async function uploadImage() {
-    const filePath = `${$user._id}-avatar.png`;
+    const filePath = `${$user._id}-avatar-${new Date().toISOString()}.png`;
     const { data, error } = await supabase.storage
       .from("files")
       .upload(filePath, avatarFile, {
@@ -45,9 +45,11 @@
   }
 
   async function updateProfile() {
-    const { publicUrl, error } = await uploadImage();
-    if (error) return alert(error);
-    newUser.avatar_url = publicUrl;
+    if (avatarFile) {
+      const { publicUrl, error } = await uploadImage();
+      if (error) return alert(error);
+      newUser.avatar_url = publicUrl;
+    }
 
     const { error: updateError } = await api.updateUser(newUser);
     if (updateError) return alert(updateError);

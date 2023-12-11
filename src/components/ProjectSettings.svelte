@@ -12,28 +12,23 @@
 
   export let project: Project;
   export let onInviteMemberClicked: () => void;
-  let newProject: Project;
-  $: newProject = project;
+  let newProject = project;
 
   async function updateProject() {
-    console.log(newProject);
     const { project: updatedProject, error } =
       await api.updateProject(newProject);
     if (error) return alert(error);
-
     project = updatedProject;
     $projects = $projects.map((p) =>
-      p._id == newProject._id ? newProject : p
+      p._id == updatedProject._id ? updatedProject : p
     );
   }
 
   async function deleteProject() {
-    // update state
-    $projects = $projects.filter((p) => p._id != newProject._id);
-    replace("/projects");
-    // TODO: update db
     const { error } = await api.deleteProject(newProject._id);
     if (error) return alert(error);
+    $projects = $projects.filter((p) => p._id != newProject._id);
+    replace("/projects");
   }
 
   async function deleteMember(memberToDelete: User) {
@@ -52,11 +47,13 @@
 
 <div class="w-full max-w-2xl mx-auto">
   <div class="text-gray-400">
-    <a href="/projects" use:link> Projects </a>
+    <a class="hover:underline" href="/projects" use:link> Projects </a>
     /
-    <a href="/projects" use:link> {project.name} </a>
+    <a class="hover:underline" href={`/projects/${project._id}`} use:link>
+      {project.name}
+    </a>
     /
-    <span>Kanban board</span>
+    <span>Settings</span>
   </div>
   <div class="text-3xl font-semibold mt-4 mb-4">Settings</div>
 

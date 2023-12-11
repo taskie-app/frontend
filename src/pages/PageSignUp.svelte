@@ -1,11 +1,17 @@
 <script lang="ts">
-  import { link, replace } from "svelte-spa-router";
-  import { api } from "../lib/api";
-  import { authenticated } from "../stores/authStore";
   import { onMount } from "svelte";
+  import { link, replace } from "svelte-spa-router";
+  import { authenticated, user } from "../stores/authStore";
+  import { api } from "../lib/api";
+  import TextField from "../components/TextField.svelte";
+  import Button from "../components/Button.svelte";
 
+  let name = "";
+  let nameError = "";
   let username = "";
+  let usernameError = "";
   let password = "";
+  let passwordError = "";
 
   onMount(() => {
     if ($authenticated) {
@@ -14,65 +20,65 @@
   });
 
   async function submit() {
-    const { error } = await api.signUp(username, password);
-    if (error) {
-      console.error(error);
-    } else {
-      $authenticated = true;
-      replace("/");
+    validateInput();
+    if (usernameError || passwordError) return;
+
+    const { user: u, error } = await api.signUp(name, username, password);
+    if (error) return alert(error);
+    $authenticated = true;
+    $user = u;
+    replace("/");
+  }
+
+  function validateInput() {
+    nameError = "";
+    usernameError = "";
+    passwordError = "";
+
+    if (!name) {
+      nameError = "Name is required";
+    }
+    if (!username) {
+      usernameError = "Username is required";
+    }
+    if (!password) {
+      passwordError = "Password is required";
     }
   }
 </script>
 
-<div class="flex h-screen flex-col items-center justify-center space-y-8">
-  <h2 class="text-3xl font-medium">Create new account</h2>
-
-  <div class="w-full max-w-sm space-y-4">
-    <div class="space-y-1">
-      <label for="username" class="text-sm font-medium">Username</label>
-      <input
-        bind:value={username}
-        type="text"
-        required
-        placeholder="Username"
-        class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
+<div class="w-full min-h-screen flex items-center justify-center bg-slate-50">
+  <div
+    class="bg-white rounded shadow-lg w-full max-w-md flex flex-col items-center py-8 gap-4"
+  >
+    <h1 class="text-2xl font-semibold">Sign up</h1>
+    <div class="w-full max-w-xs space-y-4">
+      <TextField
+        label="Name"
+        bind:value={name}
+        placeholder="Enter your name"
+        error={nameError}
       />
-    </div>
-
-    <div class="space-y-1">
-      <label
-        for="password"
-        class="block text-sm font-medium leading-6 text-gray-900"
-        >Password</label
-      >
-      <div>
-        <input
-          bind:value={password}
-          id="password"
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          required
-          placeholder="Password"
-          class="w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-        />
+      <TextField
+        label="Username"
+        bind:value={username}
+        placeholder="Enter your username"
+        error={usernameError}
+      />
+      <TextField
+        label="Password"
+        bind:value={password}
+        placeholder="Enter your password"
+        error={passwordError}
+      />
+      <Button preset="primary" label="Sign up" fluid onClick={submit} />
+      <div class="text-gray-400 text-sm text-center">
+        Already a member? <a
+          href="/sign-in"
+          use:link
+          class="text-brand-500 font-medium">Sign in here</a
+        >
       </div>
     </div>
-
-    <button
-      on:click={submit}
-      class="flex w-full justify-center rounded-md bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
-      >Sign up</button
-    >
-
-    <p class="mt-10 text-center text-sm text-gray-500">
-      Already a member?
-      <a
-        href="/sign-up"
-        use:link
-        class="font-semibold text-brand-600 hover:text-brand-500"
-        >Sign in to your account</a
-      >
-    </p>
   </div>
 </div>

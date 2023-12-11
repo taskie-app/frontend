@@ -48,9 +48,9 @@
     <h1 class="text-2xl font-semibold">Sign in</h1>
     <div class="w-full max-w-xs space-y-4">
       <TextField
-        label="Email"
+        label="Username"
         bind:value={username}
-        placeholder="Enter your email"
+        placeholder="Enter your username"
         error={usernameError}
       />
       <TextField

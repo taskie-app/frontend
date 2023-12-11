@@ -6,7 +6,8 @@
   import OverlayPanel from "./OverlayPanel.svelte";
   import CloseIcon from "../icons/CloseIcon.svelte";
   import { projects } from "../stores/projectStore";
-  import { RiCloseCircleLine, RiUploadCloudLine } from "svelte-remixicon";
+  import { RiCloseLine, RiUploadCloudLine } from "svelte-remixicon";
+  import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
 
@@ -39,7 +40,7 @@
     });
 
     api
-      .updateProject(newProject._id, newProject)
+      .updateProject(newProject)
       .then()
       .catch((error) => console.error(error));
     hide();
@@ -80,23 +81,28 @@
     class="absolute top-0 left-0 w-screen h-screen flex bg-black/50 items-center justify-center"
   >
     <div
-      class="bg-white w-full max-w-lg rounded overflow-hidden"
+      class="bg-white w-full max-w-lg rounded"
       use:clickOutside
       on:click_outside={hide}
     >
       <div class="flex items-center justify-between p-4">
-        <div class="font-medium">Invite members</div>
-        <button on:click={hide}><RiCloseCircleLine size="20px" /></button>
+        <div class="text-lg font-medium">Add members</div>
+        <div class="flex gap-1">
+          <button
+            class="w-10 h-10 rounded hover:bg-gray-200 flex items-center justify-center"
+            on:click={hide}><RiCloseLine size="20px" /></button
+          >
+        </div>
       </div>
 
-      <div class="flex flex-col p-4 gap-4 bg-slate-50">
-        <div class="relative h-48">
+      <div class="flex flex-col px-4 gap-4">
+        <div class="relative">
           <input
             type="text"
             placeholder="Search for user..."
             bind:value={username}
             on:input={debounce(findUsers, 500)}
-            class="w-full boder border-black/20 rounded px-4 h-10 outline-none focus:outline-none focus:ring-0"
+            class="w-full boder border-black/20 rounded px-4 h-10 outline-none bg-gray-100 focus:outline-none focus:ring-0 focus:bg-white"
           />
           {#if foundMemebersVisible}
             <div
@@ -116,17 +122,18 @@
         <div class="flex items-center gap-2">
           {#each selectedMembers as user}
             <div
-              class="bg-gray-100 rounded-full px-4 h-8 flex items-center gap-1"
+              class="bg-gray-200 rounded-full px-2 h-10 flex items-center gap-1"
             >
+              <UserAvatar u={user} size={6} />
               {user.username}
               <button on:click={() => removeMember(user)}><CloseIcon /></button>
             </div>
           {/each}
         </div>
       </div>
-      <div class="flex items-center justify-between p-4">
-        <Button preset="secondary" label="Cancel" onClick={hide} />
+      <div class="flex items-center justify-end p-4 gap-1">
         <Button preset="primary" label="Done" onClick={submit} />
+        <Button preset="secondary" label="Cancel" onClick={hide} />
       </div>
     </div>
   </div>
