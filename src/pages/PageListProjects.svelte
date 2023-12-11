@@ -7,8 +7,16 @@
   import SideBar from "../components/SideBar.svelte";
   import MenuBar from "../components/MenuBar.svelte";
   import ListProjectsToolbar from "../components/ListProjectsToolbar.svelte";
+  import type { Project } from "../lib/types";
+
+  const sortFunctions = {
+    name: (p1: Project, p2: Project) => (p1.name > p2.name ? 1 : -1),
+    "-name": (p1: Project, p2: Project) => (p1.name > p2.name ? -1 : 1),
+  };
+
   let createProjectPanel: any;
-  let sort = "az";
+
+  let sort: keyof typeof sortFunctions = "name";
   let filter = "done";
   let displayMode: "LIST" | "BOARD" = "BOARD";
 

@@ -26,7 +26,7 @@
 {#if $initializing}
   <div>Loading</div>
 {:else}
-  <div class="min-h-screen max-w-full text-gray-800 bg-gray-50">
+  <div class="min-h-screen max-w-full text-gray-800">
     <Router {routes} on:conditionsFailed={handleRouteFailure} />
   </div>
 {/if}

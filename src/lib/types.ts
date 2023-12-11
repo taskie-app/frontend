@@ -22,4 +22,12 @@ export type Task = {
   assignedTo?: User;
   status: "TODO" | "IN_PROGRESS" | "DONE";
   dueDate?: string;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+};
+
+export type Comment = {
+  _id: string;
+  taskId: string;
+  author: User;
+  content: string;
 };

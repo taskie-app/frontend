@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-import type { ApiResult, Project, Task, User } from "./types";
+import type { ApiResult, Project, Task, User, Comment } from "./types";
 import { API_BASE_URL } from "./config";
 
 class Api {
@@ -137,6 +137,23 @@ class Api {
     const { data } = await this.axios.delete(`/tasks/${taskId}`);
     const { error } = data;
     return { error };
+  }
+
+  async createComment(
+    taskId: string,
+    content: string
+  ): ApiResult<{ comment: Comment }> {
+    const { data } = await this.axios.post(`/tasks/${taskId}/comments/`, {
+      content,
+    });
+    const { comment, error } = data;
+    return { comment, error };
+  }
+
+  async getComments(taskId: string) {
+    const { data } = await this.axios.get(`/tasks/${taskId}/comments/`);
+    const { comments, error } = data;
+    return { comments, error };
   }
 }
 
