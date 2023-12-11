@@ -9,6 +9,7 @@
   import { RiCloseCircleLine, RiUploadCloudLine } from "svelte-remixicon";
 
   export let project: Project;
+  export let members: User[];
 
   let visible: boolean;
   let username = "";
@@ -27,7 +28,7 @@
   function submit() {
     const newProject = {
       ...project,
-      members: [...project.members, ...selectedMembers],
+      members: [...project.members, ...members],
     };
 
     $projects = $projects.map((p) => {

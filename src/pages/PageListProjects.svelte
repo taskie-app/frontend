@@ -1,36 +1,54 @@
-<script>
-  import ProjectItem from "../components/ProjectItem.svelte";
+<script lang="ts">
+  import ProjectBoardItem from "../components/ProjectBoardItem.svelte";
+  import ProjectListItem from "../components/ProjectListItem.svelte";
   import { fetchProjects, projects } from "../stores/projectStore";
   import PanelCreateProject from "../components/PanelCreateProject.svelte";
   import { onMount } from "svelte";
-  import Button from "../components/Button.svelte";
-  let createProjectPanelVisible = false;
+  import SideBar from "../components/SideBar.svelte";
+  import MenuBar from "../components/MenuBar.svelte";
+  import ListProjectsToolbar from "../components/ListProjectsToolbar.svelte";
+  let createProjectPanel: any;
+  let sort = "az";
+  let filter = "done";
+  let displayMode: "LIST" | "BOARD" = "BOARD";
 
   onMount(() => {
     fetchProjects();
   });
 </script>
 
-<div class="flex flex-1 flex-col">
-  <div class="flex-1 p-8 space-y-4">
-    <Button
-      preset="primary"
-      label="New project"
-      onClick={() => (createProjectPanelVisible = true)}
+<div class="flex relative">
+  <SideBar />
+  <div class="flex flex-col flex-1">
+    <MenuBar title="Projects" />
+    <ListProjectsToolbar
+      bind:sort
+      bind:filter
+      bind:displayMode
+      onCreateProjectClick={() => createProjectPanel?.show()}
     />
-
-    <h1 class="text-3xl font-medium">Projects</h1>
-
-    <ul
-      class="mx-auto grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
-    >
-      {#each $projects as project}
-        <li class="list-none">
-          <ProjectItem {project} />
-        </li>
-      {/each}
-    </ul>
+    <div class="h-full">
+      {#if displayMode == "LIST"}
+        <ul>
+          {#each $projects as project}
+            <li class="list-none">
+              <ProjectListItem {project} />
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <ul
+          class="px-8 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+        >
+          {#each $projects as project}
+            <li class="list-none">
+              <ProjectBoardItem {project} />
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
   </div>
 </div>
 
-<PanelCreateProject bind:visible={createProjectPanelVisible} />
+<PanelCreateProject bind:this={createProjectPanel} />

@@ -16,8 +16,9 @@ export type Project = {
 
 export type Task = {
   _id: string;
+  projectId: string;
   name: string;
-  description?: string;
+  description: string;
   assignedTo?: User;
   status: "TODO" | "IN_PROGRESS" | "DONE";
   dueDate?: string;

@@ -21,7 +21,7 @@
     use:clickOutside
     on:click_outside={hide}
     class:hidden={!showContent}
-    class="absolute z-20 right-0 border w-48 bg-white rounded-md mt-2 shadow-sm"
+    class="absolute z-20 right-0 border w-48 bg-white rounded-md mt-2 shadow-sm overflow-hidden"
   >
     <slot name="content" />
   </div>

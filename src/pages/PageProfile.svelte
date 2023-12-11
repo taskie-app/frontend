@@ -1,70 +1,52 @@
-<script lang="ts">
-  import { api } from "../lib/api";
+<script>
+  import axios from "axios";
+  import { onMount } from "svelte";
 
-  let username = "";
-  let password = "";
-  let avatar = null;
+  let selectedImage;
+  let imageUrl;
 
-  async function registerUser() {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    selectedImage = file;
+
+    // Display a preview of the selected image (optional)
+    const reader = new FileReader();
+    reader.onload = () => {
+      imageUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const uploadImage = async () => {
     const formData = new FormData();
-    console.log(formData);
-
-    formData.append("username", username);
-    formData.append("password", password);
-    formData.append("avatar", avatar[0]);
-
-    await api.updateUser("1", formData);
-  }
+    formData.append("image", selectedImage);
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4000/files",
+        formData
+      );
+      console.log(data);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 </script>
 
 <main>
-  <h1>User Registration</h1>
-  <form>
-    <label for="username">Username:</label>
-    <input type="text" id="username" bind:value={username} required />
+  <input type="file" accept="image/*" on:change={handleFileChange} />
+  <button on:click={uploadImage} disabled={!selectedImage}>
+    Upload Image
+  </button>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" bind:value={password} required />
-
-    <label for="avatar">Avatar:</label>
-    <input
-      type="file"
-      id="avatar"
-      bind:files={avatar}
-      accept="image/*"
-      required
-    />
-
-    <button type="button" on:click={registerUser}>Register</button>
-  </form>
+  {#if imageUrl}
+    <img src={imageUrl} alt="Uploaded Image" />
+  {/if}
 </main>
 
 <style>
-  main {
-    text-align: center;
-    margin: 2rem;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 300px;
-    margin: 0 auto;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  input {
-    padding: 0.5rem;
-  }
-
-  button {
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+  img {
+    max-width: 100%;
+    max-height: 300px;
+    margin-top: 10px;
   }
 </style>
