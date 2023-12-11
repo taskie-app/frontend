@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { link, replace } from "svelte-spa-router";
-  import { authenticated } from "../stores/authStore";
+  import { authenticated, user } from "../stores/authStore";
   import { api } from "../lib/api";
   import TextField from "../components/TextField.svelte";
   import Button from "../components/Button.svelte";
@@ -21,13 +21,11 @@
     validateInput();
     if (usernameError || passwordError) return;
 
-    const { error } = await api.signIn(username, password);
-    if (error) {
-      console.error(error);
-    } else {
-      $authenticated = true;
-      replace("/");
-    }
+    const { user: u, error } = await api.signIn(username, password);
+    if (error) return alert(error);
+    $authenticated = true;
+    $user = u;
+    replace("/");
   }
 
   function validateInput() {
@@ -47,7 +45,7 @@
   <div
     class="bg-white rounded shadow-lg w-full max-w-md flex flex-col items-center py-8 gap-4"
   >
-    <h1 class="text-2xl">Sign in</h1>
+    <h1 class="text-2xl font-semibold">Sign in</h1>
     <div class="w-full max-w-xs space-y-4">
       <TextField
         label="Email"
@@ -63,8 +61,10 @@
       />
       <Button preset="primary" label="Sign in" fluid onClick={submit} />
       <div class="text-gray-400 text-sm text-center">
-        Don't have an account? <span class="text-brand-500 font-medium"
-          >Sign up here</span
+        Don't have an account? <a
+          href="/sign-up"
+          use:link
+          class="text-brand-500 font-medium">Sign up here</a
         >
       </div>
     </div>

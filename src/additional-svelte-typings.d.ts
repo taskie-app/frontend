@@ -10,8 +10,11 @@ declare namespace svelteHTML {
   interface HTMLAttributes<T> {
     // If you want to use on:beforeinstallprompt
     "on:click_outside"?: () => void;
+    "on:text-change"?: (e: any) => void;
     // If you want to use myCustomAttribute={..} (note: all lowercase)
     mycustomattribute?: any;
     // You can replace any with something more specific if you like
   }
 }
+
+declare module "quill";

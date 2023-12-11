@@ -8,14 +8,14 @@
   export let onTaskSelected: (task: Task) => void;
 
   const LABEL_BY_STATUS = {
-    TODO: "Todo",
-    IN_PROGRESS: "In progress",
-    DONE: "Done",
+    TODO: "TODO",
+    IN_PROGRESS: "IN PROGRESS",
+    DONE: "DONE",
   };
   const CLASS_BY_STATUS = {
-    TODO: "bg-sky-100 text-sky-500",
-    IN_PROGRESS: "bg-yellow-100 text-yellow-500",
-    DONE: "bg-green-100 text-green-500",
+    TODO: "bg-blue-500 text-white",
+    IN_PROGRESS: "bg-amber-500 text-white",
+    DONE: "bg-green-500 text-white",
   };
 </script>
 
@@ -36,12 +36,16 @@
 
   <div class="col-span-3">
     <div class="block overflow-hidden text-ellipsis max-w-full text-gray-400">
-      {task.description}
+      {task.description?.text}
     </div>
   </div>
 
   <div class="flex justify-end">
-    <div class={`${CLASS_BY_STATUS[task.status]} px-2 rounded inline-block`}>
+    <div
+      class={`${
+        CLASS_BY_STATUS[task.status]
+      } px-2 rounded-sm font-medium text-sm py-1 inline-block`}
+    >
       {LABEL_BY_STATUS[task.status]}
     </div>
   </div>

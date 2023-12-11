@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-import type { ApiResult, Project, Task, User } from "./types";
+import type { ApiResult, Project, Task, User, Comment } from "./types";
 import { API_BASE_URL } from "./config";
 
 class Api {
@@ -22,16 +22,13 @@ class Api {
     return { token, error };
   }
 
-  async signIn(
-    username: string,
-    password: string
-  ): ApiResult<{ token: string }> {
+  async signIn(username: string, password: string): ApiResult<{ user: User }> {
     const { data } = await this.axios.post("/users/sign-in", {
       username,
       password,
     });
-    const { token, error } = data;
-    return { token, error };
+    const { user, error } = data;
+    return { user, error };
   }
 
   async signOut() {
@@ -40,10 +37,11 @@ class Api {
     return { error };
   }
 
-  async getAuthenticated(): ApiResult<{ authenticated: boolean }> {
+  async getAuthenticated(): ApiResult<{ authenticated: boolean; user: User }> {
     const { data } = await this.axios.get("/authenticated/");
-    const { authenticated, error } = data;
-    return { authenticated, error };
+    const { authenticated, user, error } = data;
+    console.log(user);
+    return { authenticated, user, error };
   }
 
   async getUsers(filter: { username?: string }): ApiResult<{ users: User[] }> {
@@ -53,8 +51,10 @@ class Api {
     return { users, error };
   }
 
-  async updateUser(id: string, newData: User) {
-    const { data } = await this.axios.put(`/users/${id}`, newData);
+  async updateUser(user: User) {
+    const { data } = await this.axios.put(`/users/${user._id}`, user);
+    const { error } = data;
+    return { error };
   }
 
   async getProjects(): ApiResult<{ projects: Project[] }> {
@@ -82,11 +82,11 @@ class Api {
     return { project, error };
   }
 
-  async updateProject(
-    id: string,
-    newData: Project
-  ): ApiResult<{ project: Project }> {
-    const { data } = await this.axios.put(`/projects/${id}`, newData);
+  async updateProject(newProject: Project): ApiResult<{ project: Project }> {
+    const { data } = await this.axios.put(
+      `/projects/${newProject._id}`,
+      newProject
+    );
     const { project, error } = data;
     return { project, error };
   }
@@ -103,7 +103,7 @@ class Api {
     return { error };
   }
 
-  async createTask(t: Task) {
+  async createTask(t: Omit<Task, "_id">) {
     const { data } = await this.axios.post("/tasks/", t);
     const { task, error } = data;
     return { task, error };
@@ -137,6 +137,23 @@ class Api {
     const { data } = await this.axios.delete(`/tasks/${taskId}`);
     const { error } = data;
     return { error };
+  }
+
+  async createComment(
+    taskId: string,
+    content: string
+  ): ApiResult<{ comment: Comment }> {
+    const { data } = await this.axios.post(`/tasks/${taskId}/comments/`, {
+      content,
+    });
+    const { comment, error } = data;
+    return { comment, error };
+  }
+
+  async getComments(taskId: string) {
+    const { data } = await this.axios.get(`/tasks/${taskId}/comments/`);
+    const { comments, error } = data;
+    return { comments, error };
   }
 }
 

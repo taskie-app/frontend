@@ -22,7 +22,7 @@
 </script>
 
 <div
-  class="h-16 flex items-center justify-between px-4 gap-2 border-b bg-white"
+  class="h-12 flex items-center justify-between px-4 gap-2 border-b bg-white"
 >
   <div class="px-4 font-medium">{title}</div>
   <PopupMenu>

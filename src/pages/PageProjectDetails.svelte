@@ -11,12 +11,11 @@
   import TaskList from "../components/TaskList.svelte";
   import TaskBoard from "../components/TaskBoard.svelte";
   import ProjectSettings from "../components/ProjectSettings.svelte";
-
-  enum Tab {
-    TASKS,
-    KANBAN,
-    SETTINGS,
-  }
+  import ProjectMembers from "../components/ProjectMembers.svelte";
+  import ProjectSideBar from "../components/ProjectSideBar.svelte";
+  import { RiAddLine } from "svelte-remixicon";
+  import { ProjectTab } from "../lib/constants";
+  import PageLayout from "../components/PageLayout.svelte";
 
   export let params: { id: string };
 
@@ -30,7 +29,7 @@
   $: project && fetchTasks();
 
   let tasks: Task[] = [];
-  let tab: Tab = Tab.TASKS;
+  let tab: ProjectTab = ProjectTab.TASKS;
 
   $: filterdTasks = tasks.filter((t) => true);
 
@@ -48,13 +47,30 @@
 </script>
 
 {#if project}
-  <div class="flex">
+  <PageLayout>
     <SideBar />
+    <ProjectSideBar {project} bind:currentTab={tab} />
     <div class="flex-1">
-      <MenuBar title={`Projects / ${project.name}`} />
+      <!-- <MenuBar title={`Projects / ${project.name}`} /> -->
       <div class="px-8 pt-8">
-        <div class="text-3xl font-medium">{project.name}</div>
+        <!-- <div class="text-3xl font-medium">{project.name}</div>
         <div class="text-lg text-gray-400">{project.description}</div>
+
+        <div class="flex items-center gap-1 mt-4">
+          <div class="flex items-center -space-x-2">
+            {#each project.members as member}
+              <div
+                class="w-10 h-10 rounded-full bg-gray-200 border-2 border-white"
+              ></div>
+            {/each}
+          </div>
+          <button
+            class="w-9 h-9 flex items-center justify-center rounded-full bg-white border-2 border-brand-500"
+            on:click={() => panelInviteMember?.show()}
+          >
+            <RiAddLine size="20px" class="text-brand-500" />
+          </button>
+        </div>
         <div class="flex items-center justify-between my-4">
           <div class="flex gap-4">
             <TabButton bind:currentTab={tab} value={Tab.TASKS} label="TASKS" />
@@ -69,29 +85,34 @@
               label="SETTINGS"
             />
           </div>
-          <div class="flex items-center -space-x-2">
-            {#each [1, 2, 3] as member}
-              <div
-                class="w-10 h-10 rounded-full bg-gray-200 border-2 border-white"
-              ></div>
-            {/each}
-          </div>
-        </div>
+        </div> -->
 
-        {#if tab == Tab.TASKS}
+        {#if tab == ProjectTab.TASKS}
           <TaskList
             {project}
             bind:tasks
             onTaskSelected={viewTaskDetails}
-            onCreateTaskClick={() => panelCreateTask?.show()}
+            onCreateTaskClicked={() => panelCreateTask?.show()}
           />
         {/if}
 
-        {#if tab == Tab.KANBAN}
-          <TaskBoard {project} bind:tasks onTaskSelected={viewTaskDetails} />
+        {#if tab == ProjectTab.KANBAN}
+          <TaskBoard
+            {project}
+            bind:tasks
+            onTaskSelected={viewTaskDetails}
+            onCreateTaskClicked={() => panelCreateTask?.show()}
+          />
         {/if}
 
-        {#if tab == Tab.SETTINGS}
+        {#if tab == ProjectTab.MEMBERS}
+          <ProjectMembers
+            bind:project
+            onInviteMemberClicked={() => panelInviteMember?.show()}
+          />
+        {/if}
+
+        {#if tab == ProjectTab.SETTINGS}
           <ProjectSettings
             bind:project
             onInviteMemberClicked={() => panelInviteMember?.show()}
@@ -99,13 +120,9 @@
         {/if}
       </div>
     </div>
-  </div>
+  </PageLayout>
 
-  <PanelInviteMember
-    bind:this={panelInviteMember}
-    bind:members={project.members}
-    {project}
-  />
+  <PanelInviteMember bind:this={panelInviteMember} {project} />
   <PanelCreateTask bind:this={panelCreateTask} bind:tasks {project} />
   <PanelTaskDetails bind:this={panelTaskDetails} bind:tasks {project} />
 {/if}
