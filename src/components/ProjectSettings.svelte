@@ -5,6 +5,8 @@
   import Button from "./Button.svelte";
   import { projects } from "../stores/projectStore";
   import { api } from "../lib/api";
+  import { link, replace } from "svelte-spa-router";
+  import TextEditor from "./TextEditor.svelte";
 
   export let project: Project;
   export let onInviteMemberClicked: () => void;
@@ -24,32 +26,51 @@
   async function deleteProject() {
     // update state
     $projects = $projects.filter((p) => p._id != newProject._id);
+    replace("/projects");
     // TODO: update db
     const { error } = await api.deleteProject(newProject._id);
     if (error) return alert(error);
   }
 </script>
 
-<div
-  class="px-8 py-4 rounded bg-white rounded border overflow-hidden w-full max-w-3xl mx-auto space-y-8"
->
-  <div class="space-y-4">
-    <div class="text-xl font-medium">Information</div>
-    <TextField
-      label="Name"
-      bind:value={newProject.name}
-      placeholder="Enter project name"
-      error=""
-    />
-    <TextField
-      label="Description"
-      bind:value={newProject.description}
-      placeholder="Enter project name"
-      error=""
-    />
+<div class="w-full max-w-2xl mx-auto">
+  <div class="text-gray-400">
+    <a href="/projects" use:link> Projects </a>
+    /
+    <a href="/projects" use:link> {project.name} </a>
+    /
+    <span>Kanban board</span>
+  </div>
+  <div class="text-3xl font-semibold mt-4 mb-4">Settings</div>
+  <TextField
+    label="Name"
+    bind:value={newProject.name}
+    placeholder="Enter project name"
+    error=""
+  />
+  <div class="font-medium mt-4 mb-1">Description</div>
+  <div>
+    <TextEditor />
   </div>
 
-  <div class="space-y-4">
+  <div class="mt-4">
+    <Button preset="primary" label="Save changes" onClick={updateProject} />
+  </div>
+
+  <div class="text-lg font-medium mt-4 mb-1">Danger</div>
+  <div
+    class="flex items-center justify-between border border-red-500 rounded px-4 py-2"
+  >
+    <div>
+      <div class="font-medium">Delete this project</div>
+      <div>
+        Once you delete a project, there is no going back. Please be certain
+      </div>
+    </div>
+    <Button preset="danger" label="Delete" onClick={deleteProject} />
+  </div>
+
+  <!-- <div class="space-y-4">
     <div class="flex items-center justify-between">
       <div class="text-xl font-medium">Members</div>
       <button
@@ -60,19 +81,29 @@
         <div class="">Invite</div>
       </button>
     </div>
-    {#each [1, 2, 3] as item}
+    <div class="flex items-center gap-4">
+      <div class="w-8 h-8 rounded-full bg-gray-100"></div>
+      <div class="font-medium flex-1">{project.manager.username}</div>
+      <div class="text-gray-400">{project.manager.username}</div>
+      <div class="bg-gray-100 text-gray-400 px-2 rounded">Manager</div>
+      <button>
+        <RiDeleteBinLine size="16px" class="text-transparent" />
+      </button>
+    </div>
+    {#each project.members as member}
       <div class="flex items-center gap-4">
         <div class="w-8 h-8 rounded-full bg-gray-100"></div>
-        <div class="font-medium flex-1">Nguyễn Hải Đức</div>
-        <div class="text-gray-400">nguyenhaiduc06@gmail.com</div>
-        <div class="bg-gray-100 text-gray-400 px-2 rounded">Manager</div>
-        <RiDeleteBinLine size="16px" />
+        <div class="font-medium flex-1">{member.username}</div>
+        <div class="text-gray-400">{member.username}</div>
+        <div class="bg-gray-100 text-gray-400 px-2 rounded">Member</div>
+        <button>
+          <RiDeleteBinLine size="16px" />
+        </button>
       </div>
     {/each}
-  </div>
+  </div> -->
 
   <div class="flex items-center justify-end gap-4 mt-4">
     <Button preset="secondary" label="Save" onClick={updateProject} />
-    <Button preset="danger" label="Delete" onClick={deleteProject} />
   </div>
 </div>

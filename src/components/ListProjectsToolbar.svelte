@@ -26,9 +26,8 @@
         bind:value={sort}
         class="text-sm font-medium border-none bg-transparent outline-none focus:ring-0"
       >
-        <option>Name A-Z</option>
-        <option>Name Z-A</option>
-        <option value="">Due date</option>
+        <option value="name">Name A-Z</option>
+        <option value="-name">Name Z-A</option>
       </select>
     </button>
   </div>
