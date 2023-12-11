@@ -1,10 +1,17 @@
 <script lang="ts">
   import { api } from "../lib/api";
-  import { clickOutside } from "../actions/clickOutside";
-  import type { Project, Task } from "../lib/types";
-  import { RiCloseCircleLine, RiUploadCloudLine } from "svelte-remixicon";
-  import TextField from "./TextField.svelte";
   import Button from "./Button.svelte";
+  import { clickOutside } from "../actions/clickOutside";
+  import { RiDeleteBinLine, RiCloseLine, RiLinksLine } from "svelte-remixicon";
+  import TextEditor from "./TextEditor.svelte";
+  import type { Project, Task, Comment } from "../lib/types";
+  import TextEditedContent from "./TextEditedContent.svelte";
+  import CommentItem from "./CommentItem.svelte";
+  import SelectStatus from "./Select/SelectStatus.svelte";
+  import SelectAssignee from "./Select/SelectAssignee.svelte";
+  import SelectDate from "./Select/SelectDate.svelte";
+  import SelectPriority from "./Select/SelectPriority.svelte";
+  import TextField from "./TextField.svelte";
 
   export let project: Project;
   export let tasks: Task[];
@@ -37,83 +44,58 @@
   }
 </script>
 
+<svelte:head>
+  <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+</svelte:head>
+
 {#if visible}
   <div
-    class="absolute top-0 left-0 w-screen h-screen flex bg-black/50 items-center justify-center"
+    class="absolute top-0 left-0 w-full max-w-screen h-screen py-8 flex bg-black/50 items-center justify-center overflow-y-scroll"
   >
+    <div class="h-8"></div>
     <div
-      class="bg-white w-full max-w-3xl rounded overflow-hidden"
+      class="bg-white w-full max-w-xl rounded"
       use:clickOutside
       on:click_outside={hide}
     >
       <div class="flex items-center justify-between p-4">
-        <div class="font-medium">Details</div>
-        <button on:click={hide}><RiCloseCircleLine size="20px" /></button>
-      </div>
-
-      <div class="grid grid-cols-3 bg-slate-50 p-4 gap-4">
-        <div class="col-span-2 flex flex-col gap-4 bg-slate-50">
-          <button class="">
-            <div
-              class="flex gap-1 items-center justify-center h-48 text-gray-600 bg-white border border-gray-100 rounded"
-            >
-              <RiUploadCloudLine size="20px" />
-              <div>Upload cover image</div>
-            </div>
-          </button>
-          <TextField
-            label="Name"
-            bind:value={task.name}
-            placeholder="Enter task name"
-            error={""}
-          />
-          <TextField
-            label="Description"
-            bind:value={task.description}
-            placeholder="Enter task description"
-            error={""}
-          />
-        </div>
-
-        <div class="space-y-4">
-          <div class="space-y-2">
-            <div class="text-sm font-medium text-gray-400">STATUS</div>
-            <select
-              bind:value={task.status}
-              class="border rounded border-gray-300 w-full text-sm font-medium bg-white outline-none focus:ring-0"
-            >
-              <option value="TODO">Todo</option>
-              <option value="IN_PROGRESS">In progress</option>
-              <option value="DONE">Done</option>
-            </select>
-          </div>
-
-          <div class="space-y-2">
-            <div class="text-sm font-medium text-gray-400">ASSIGNEE</div>
-            <select
-              value={task.assignedTo?._id}
-              class="border rounded border-gray-300 w-full text-sm font-medium bg-white outline-none focus:ring-0"
-            >
-              <option value="">No assignee</option>
-              {#each project.members as member}
-                <option value={member._id}>{member.username}</option>
-              {/each}
-            </select>
-          </div>
-
-          <div class="space-y-2">
-            <div class="text-sm font-medium text-gray-400">DUE DATE</div>
-            <input
-              type="date"
-              bind:value={task.dueDate}
-              class="border rounded border-gray-300 w-full text-sm font-medium bg-white outline-none focus:ring-0"
-            />
-          </div>
+        <div class="text-lg font-medium">Create task</div>
+        <div class="flex gap-1">
+          <button
+            class="w-10 h-10 rounded hover:bg-gray-200 flex items-center justify-center"
+            on:click={hide}><RiCloseLine size="20px" /></button
+          >
         </div>
       </div>
-      <div class="flex items-center justify-between p-4">
-        <Button preset="secondary" label="Cancel" onClick={hide} />
+
+      <div class="px-4 space-y-4">
+        <TextField
+          label="Name"
+          bind:value={task.name}
+          placeholder="Enter task name"
+          error={""}
+        />
+
+        <div class="space-y-1">
+          <div class="text-sm font-medium">Description</div>
+          <TextEditor />
+        </div>
+
+        <SelectStatus bind:status={task.status} />
+
+        <SelectAssignee
+          bind:assignee={task.assignedTo}
+          members={project.members}
+        />
+
+        <SelectDate bind:date={task.dueDate} />
+
+        <SelectPriority priority="HIGH" />
+      </div>
+
+      <div class="flex items-center justify-end gap-2 p-4">
         <Button preset="primary" label="Create" onClick={createTask} />
+        <Button preset="secondary" label="Cancel" onClick={hide} />
       </div>
     </div>
   </div>
