@@ -1,6 +1,7 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import type { Project } from "../lib/types";
+  import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
 </script>
@@ -35,9 +36,9 @@
 
   <div class="flex -space-x-2 mt-6">
     {#each project.members as member}
-      <div
-        class="w-12 h-12 rounded-full bg-gray-200 border-4 border-white"
-      ></div>
+      <div class="border-2 border-white rounded-full">
+        <UserAvatar u={member} size={10} />
+      </div>
     {/each}
   </div>
 </div>

@@ -10,6 +10,7 @@
   import TaskListItem from "./TaskListItem.svelte";
   import { link } from "svelte-spa-router";
   import Button from "./Button.svelte";
+  import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
   export let tasks: Task[] = [];
@@ -63,11 +64,11 @@
     bind:value={nameFilter}
   />
 
-  <div class="flex items-center gap-0.5">
+  <div class="flex items-center gap-1">
     {#each project.members as member}
       <button
         class:border-brand-500={assigneeFilter?._id == member._id}
-        class="w-8 h-8 rounded-full bg-gray-200 border-2 transition-all duration-100 hover:scale-110"
+        class="border-2 rounded-full transition-all duration-100 hover:scale-110"
         on:click={() => {
           if (!assigneeFilter || assigneeFilter._id != member._id) {
             assigneeFilter = member;
@@ -75,7 +76,9 @@
           }
           assigneeFilter = null;
         }}
-      ></button>
+      >
+        <UserAvatar size={10} u={member} />
+      </button>
     {/each}
   </div>
 

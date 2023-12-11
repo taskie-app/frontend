@@ -11,15 +11,17 @@ class Api {
     });
   }
   async signUp(
+    name: string,
     username: string,
     password: string
-  ): ApiResult<{ token: string }> {
+  ): ApiResult<{ user: User }> {
     const { data } = await this.axios.post("/users", {
+      name,
       username,
       password,
     });
-    const { token, error } = data;
-    return { token, error };
+    const { user, error } = data;
+    return { user, error };
   }
 
   async signIn(username: string, password: string): ApiResult<{ user: User }> {

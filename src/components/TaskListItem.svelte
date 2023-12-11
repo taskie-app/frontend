@@ -1,7 +1,7 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import type { Project, Task } from "../lib/types";
-  import { RiCalendarLine, RiUser3Line } from "svelte-remixicon";
+  import { RiCalendarLine, RiUser3Line, RiArrowUpLine } from "svelte-remixicon";
 
   export let project: Project;
   export let task: Task;
@@ -17,9 +17,21 @@
     IN_PROGRESS: "bg-amber-500 text-white",
     DONE: "bg-green-500 text-white",
   };
+  const ICON_CLASS_BY_PRIORITY = {
+    HIGH: "text-red-500",
+    MEDIUM: "text-amber-500",
+    LOW: "text-green-500",
+  };
 </script>
 
-<div class="grid grid-cols-8 items-center px-4 py-4 gap-2">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-interactive-supports-focus -->
+<div
+  class="flex items-center px-4 py-4 gap-2 hover:bg-gray-100"
+  on:click={() => onTaskSelected(task)}
+  role="button"
+>
   <div class="col-span-2 flex items-center gap-2">
     <input
       type="checkbox"
@@ -27,20 +39,30 @@
       class="w-5 h-5 rounded"
       checked={task.status == "DONE"}
     />
-    <button on:click={() => onTaskSelected(task)}>
-      <div class="font-medium">
-        {task.name}
-      </div>
-    </button>
+    <div class="font-medium">
+      {task.name}
+    </div>
   </div>
 
-  <div class="col-span-3">
+  <div class="col-span-2">
     <div class="block overflow-hidden text-ellipsis max-w-full text-gray-400">
       {task.description?.text}
     </div>
   </div>
-
+  <div class="flex-1"></div>
   <div class="flex justify-end">
+    <div
+      class={`flex items-center bg-gray-200 px-2 rounded-sm font-medium text-sm  py-1`}
+    >
+      <RiArrowUpLine
+        size="16px"
+        class={ICON_CLASS_BY_PRIORITY[task.priority]}
+      />
+      {task.priority}
+    </div>
+  </div>
+
+  <div class="w-32 flex justify-end">
     <div
       class={`${
         CLASS_BY_STATUS[task.status]
@@ -50,14 +72,14 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-end text-gray-400 space-x-1">
+  <div class="w-32 flex items-center justify-end text-gray-400 space-x-1">
     <RiUser3Line size="16px" />
     <div>
       {task.assignedTo?.username ?? "Unassigned"}
     </div>
   </div>
 
-  <div class="flex items-center justify-end text-gray-400 space-x-1">
+  <div class="w-32 flex items-center justify-end text-gray-400 space-x-1">
     <RiCalendarLine size="16px" />
     <div>
       {task.dueDate ?? "No due date"}

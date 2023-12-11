@@ -105,13 +105,6 @@
           />
         {/if}
 
-        {#if tab == ProjectTab.MEMBERS}
-          <ProjectMembers
-            bind:project
-            onInviteMemberClicked={() => panelInviteMember?.show()}
-          />
-        {/if}
-
         {#if tab == ProjectTab.SETTINGS}
           <ProjectSettings
             bind:project

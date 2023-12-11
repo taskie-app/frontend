@@ -51,17 +51,6 @@
   </button>
   <button
     class={`flex items-center gap-2 px-4 hover:bg-gray-200 h-12 rounded ${
-      currentTab == ProjectTab.MEMBERS
-        ? "text-brand-500 bg-gray-200"
-        : "text-gray-700"
-    }`}
-    on:click={() => (currentTab = ProjectTab.MEMBERS)}
-  >
-    <RiUserSettingsLine size="20px" />
-    <div>Members</div>
-  </button>
-  <button
-    class={`flex items-center gap-2 px-4 hover:bg-gray-200 h-12 rounded ${
       currentTab == ProjectTab.SETTINGS
         ? "text-brand-500 bg-gray-200"
         : "text-gray-700"
