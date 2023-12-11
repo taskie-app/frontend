@@ -4,6 +4,7 @@ export type User = {
   _id: string;
   name: string;
   username: string;
+  avatar_url: string;
 };
 
 export type Project = {

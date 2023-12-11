@@ -1,8 +1,7 @@
 <script>
   import { link } from "svelte-spa-router";
-  import SideBarLink from "../components/SideBarLink.svelte";
-  import { projects } from "../stores/projectStore";
   import { RiBriefcaseLine, RiCalendarTodoLine } from "svelte-remixicon";
+  import UserAvatar from "./UserAvatar.svelte";
 </script>
 
 <div
@@ -37,7 +36,7 @@
       class="flex items-center w-[256px] py-4 hover:bg-brand-400 font-medium text-white text-sm uppercase"
     >
       <div class="w-[64px] flex items-center justify-center">
-        <div class="w-5 h-5 rounded-full bg-white"></div>
+        <UserAvatar />
       </div>
       <div>Account</div>
     </div>

@@ -11,6 +11,7 @@
   import TaskList from "../components/TaskList.svelte";
   import TaskBoard from "../components/TaskBoard.svelte";
   import ProjectSettings from "../components/ProjectSettings.svelte";
+  import ProjectMembers from "../components/ProjectMembers.svelte";
   import ProjectSideBar from "../components/ProjectSideBar.svelte";
   import { RiAddLine } from "svelte-remixicon";
   import { ProjectTab } from "../lib/constants";
@@ -101,6 +102,13 @@
             bind:tasks
             onTaskSelected={viewTaskDetails}
             onCreateTaskClicked={() => panelCreateTask?.show()}
+          />
+        {/if}
+
+        {#if tab == ProjectTab.MEMBERS}
+          <ProjectMembers
+            bind:project
+            onInviteMemberClicked={() => panelInviteMember?.show()}
           />
         {/if}
 
