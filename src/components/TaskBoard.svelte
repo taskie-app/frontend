@@ -1,16 +1,33 @@
 <script lang="ts">
-  import type { Project, Task } from "../lib/types";
+  import type { Project, Task, User } from "../lib/types";
   import { dropzone } from "../lib/dnd";
   import { api } from "../lib/api";
   import TaskBoardItem from "./TaskBoardItem.svelte";
+  import { link } from "svelte-spa-router";
+  import Button from "./Button.svelte";
+  import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
   export let tasks: Task[] = [];
   export let onTaskSelected: (task: Task) => void;
+  export let onCreateTaskClicked: () => void;
 
-  $: todoTasks = tasks.filter((task) => task.status == "TODO");
-  $: inProgressTasks = tasks.filter((task) => task.status == "IN_PROGRESS");
-  $: doneTasks = tasks.filter((task) => task.status == "DONE");
+  let nameFilter: string = "";
+  let assigneeFilter: User | null = null;
+
+  $: filteredTasks = tasks.filter((t) => {
+    const satisfiedName =
+      !nameFilter || t.name.toLowerCase().includes(nameFilter.toLowerCase());
+    const satisfiedAssignee =
+      !assigneeFilter || t.assignedTo?._id == assigneeFilter._id;
+    return satisfiedName && satisfiedAssignee;
+  });
+
+  $: todoTasks = filteredTasks.filter((task) => task.status == "TODO");
+  $: inProgressTasks = filteredTasks.filter(
+    (task) => task.status == "IN_PROGRESS"
+  );
+  $: doneTasks = filteredTasks.filter((task) => task.status == "DONE");
 
   async function changeTaskStatus(
     taskId: Task["_id"],
@@ -29,9 +46,47 @@
   }
 </script>
 
-<div class="grid grid-cols-3 gap-4 overflow-y-hidden">
+<div class="text-gray-400">
+  <a href="/projects" use:link> Projects </a>
+  /
+  <a href="/projects" use:link> {project.name} </a>
+  /
+  <span>Kanban board</span>
+</div>
+<div class="text-3xl font-semibold mt-4 mb-4">Kanban board</div>
+<div class="flex items-center gap-4">
+  <input
+    type="text"
+    class="border-gray-300 rounded"
+    placeholder="Search by task name..."
+    bind:value={nameFilter}
+  />
+
+  <div class="flex items-center gap-0.5">
+    {#each project.members as member}
+      <button
+        class:border-brand-500={assigneeFilter?._id == member._id}
+        class="border-2 rounded-full transition-all duration-100 hover:scale-110"
+        on:click={() => {
+          if (!assigneeFilter || assigneeFilter._id != member._id) {
+            assigneeFilter = member;
+            return;
+          }
+          assigneeFilter = null;
+        }}
+      >
+        <UserAvatar u={member} />
+      </button>
+    {/each}
+  </div>
+
+  <div class="flex-1"></div>
+
+  <Button preset="primary" label="Add task" onClick={onCreateTaskClicked} />
+</div>
+<div class="grid grid-cols-3 gap-4 overflow-y-hidden mt-4">
   <div
-    class="flex flex-col gap-4 bg-white border overflow-hidden p-4 rounded dropzone"
+    class="flex flex-col gap-4 bg-gray-100 overflow-hidden p-4 rounded dropzone"
     use:dropzone={{
       on_dropzone(taskId) {
         changeTaskStatus(taskId, "TODO");
@@ -40,7 +95,7 @@
   >
     <div class="flex items-center justify-between gap-2 py-2">
       <div
-        class="text-lg font-medium bg-sky-100 text-sky-500 px-4 py-0.5 rounded"
+        class="text-lg font-medium bg-blue-500 text-white px-4 py-0.5 rounded"
       >
         Todo
       </div>
@@ -53,7 +108,7 @@
     {/each}
   </div>
   <div
-    class="flex flex-col gap-4 bg-white border overflow-hidden p-4 rounded dropzone"
+    class="flex flex-col gap-4 bg-gray-100 overflow-hidden p-4 rounded dropzone"
     use:dropzone={{
       on_dropzone(taskId) {
         changeTaskStatus(taskId, "IN_PROGRESS");
@@ -62,7 +117,7 @@
   >
     <div class="flex items-center justify-between gap-2 py-2">
       <div
-        class="text-lg font-medium bg-yellow-100 text-yellow-500 px-4 py-0.5 rounded"
+        class="text-lg font-medium bg-amber-500 text-white px-4 py-0.5 rounded"
       >
         In progress
       </div>
@@ -75,7 +130,7 @@
     {/each}
   </div>
   <div
-    class="flex flex-col gap-4 bg-white border overflow-hidden p-4 rounded dropzone"
+    class="flex flex-col gap-4 bg-gray-100 overflow-hidden p-4 rounded dropzone"
     use:dropzone={{
       on_dropzone(taskId) {
         changeTaskStatus(taskId, "DONE");
@@ -84,7 +139,7 @@
   >
     <div class="flex items-center justify-between gap-2 py-2">
       <div
-        class="text-lg font-medium bg-green-100 text-green-500 px-4 py-0.5 rounded"
+        class="text-lg font-medium bg-green-500 text-white px-4 py-0.5 rounded"
       >
         Done
       </div>
