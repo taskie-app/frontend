@@ -1,70 +1,124 @@
 <script lang="ts">
+  import { link } from "svelte-spa-router";
+  import { user } from "../stores/authStore";
+  import { supabase } from "../lib/supbase";
   import { api } from "../lib/api";
+  import type { User } from "../lib/types";
+  import PageLayout from "../components/PageLayout.svelte";
+  import TextField from "../components/TextField.svelte";
+  import Button from "../components/Button.svelte";
+  import SideBar from "../components/SideBar.svelte";
 
-  let username = "";
-  let password = "";
-  let avatar = null;
+  let newUser: User;
+  // newUser is a copy of user, every change will bind to newUser
+  $: newUser = $user;
 
-  async function registerUser() {
-    const formData = new FormData();
-    console.log(formData);
+  let avatarFile: any;
 
-    formData.append("username", username);
-    formData.append("password", password);
-    formData.append("avatar", avatar[0]);
+  const handleFileChange = (event: any) => {
+    const file = event?.target?.files[0];
+    avatarFile = file;
 
-    await api.updateUser("1", formData);
+    // Display a preview of the selected image (optional)
+    const reader = new FileReader();
+    reader.onload = () => {
+      // @ts-ignore
+      newUser.avatar_url = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  async function uploadImage() {
+    const filePath = `${$user._id}-avatar-${new Date().toISOString()}.png`;
+    const { data, error } = await supabase.storage
+      .from("files")
+      .upload(filePath, avatarFile, {
+        cacheControl: "5",
+        upsert: true,
+      });
+
+    if (error) return { publicUrl: "", error: error.message };
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("files").getPublicUrl(filePath);
+    return { publicUrl };
+  }
+
+  async function updateProfile() {
+    if (avatarFile) {
+      const { publicUrl, error } = await uploadImage();
+      if (error) return alert(error);
+      newUser.avatar_url = publicUrl;
+    }
+
+    const { error: updateError } = await api.updateUser(newUser);
+    if (updateError) return alert(updateError);
+    $user = newUser;
   }
 </script>
 
-<main>
-  <h1>User Registration</h1>
-  <form>
-    <label for="username">Username:</label>
-    <input type="text" id="username" bind:value={username} required />
+<PageLayout>
+  <SideBar />
+  <div class="p-8 w-full">
+    <div class="w-full max-w-2xl mx-auto">
+      <div class="text-gray-400">
+        <a href="/projects" use:link> Projects </a>
+        /
+        <a href="/projects" use:link> dasdas </a>
+        /
+        <span>Profiel</span>
+      </div>
+      <div class="text-3xl font-semibold mt-4 mb-4">Profile settings</div>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" bind:value={password} required />
+      <div class="text-lg font-medium mt-4 mb-1">Information</div>
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <div class="text-sm font-medium">Avatar</div>
+          <img
+            src={newUser.avatar_url}
+            class="w-32 h-32 rounded bg-gray-200 object-cover"
+            alt="User avatar"
+          />
+          <input type="file" accept="image/*" on:change={handleFileChange} />
+        </div>
 
-    <label for="avatar">Avatar:</label>
-    <input
-      type="file"
-      id="avatar"
-      bind:files={avatar}
-      accept="image/*"
-      required
-    />
+        <TextField
+          label="Name"
+          bind:value={newUser.name}
+          placeholder="Enter name"
+          error=""
+        />
 
-    <button type="button" on:click={registerUser}>Register</button>
-  </form>
-</main>
+        <TextField
+          label="Username"
+          bind:value={newUser.username}
+          placeholder="Enter username"
+          error=""
+        />
 
-<style>
-  main {
-    text-align: center;
-    margin: 2rem;
-  }
+        <Button preset="primary" label="Save changes" onClick={updateProfile} />
+      </div>
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 300px;
-    margin: 0 auto;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  input {
-    padding: 0.5rem;
-  }
-
-  button {
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-</style>
+      <div class="text-lg font-medium mt-4 mb-1">Password</div>
+      <div class="space-y-4">
+        <TextField
+          label="Old password"
+          bind:value={newUser.name}
+          placeholder="Enter your old password"
+          error=""
+        />
+        <TextField
+          label="New password"
+          bind:value={newUser.username}
+          placeholder="Enter your new password"
+          error=""
+        />
+        <Button
+          preset="primary"
+          label="Change password"
+          onClick={updateProfile}
+        />
+      </div>
+    </div>
+  </div>
+</PageLayout>

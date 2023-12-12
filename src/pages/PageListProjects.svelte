@@ -1,36 +1,64 @@
-<script>
-  import ProjectItem from "../components/ProjectItem.svelte";
+<script lang="ts">
+  import ProjectBoardItem from "../components/ProjectBoardItem.svelte";
+  import ProjectListItem from "../components/ProjectListItem.svelte";
   import { fetchProjects, projects } from "../stores/projectStore";
   import PanelCreateProject from "../components/PanelCreateProject.svelte";
   import { onMount } from "svelte";
-  import Button from "../components/Button.svelte";
-  let createProjectPanelVisible = false;
+  import SideBar from "../components/SideBar.svelte";
+  import MenuBar from "../components/MenuBar.svelte";
+  import ListProjectsToolbar from "../components/ListProjectsToolbar.svelte";
+  import type { Project } from "../lib/types";
+  import PageLayout from "../components/PageLayout.svelte";
+
+  const sortFunctions = {
+    name: (p1: Project, p2: Project) => (p1.name > p2.name ? 1 : -1),
+    "-name": (p1: Project, p2: Project) => (p1.name > p2.name ? -1 : 1),
+  };
+
+  let createProjectPanel: any;
+
+  let sort: keyof typeof sortFunctions = "name";
+  let filter = "done";
+  let displayMode: "LIST" | "BOARD" = "BOARD";
 
   onMount(() => {
     fetchProjects();
   });
 </script>
 
-<div class="flex flex-1 flex-col">
-  <div class="flex-1 p-8 space-y-4">
-    <Button
-      preset="primary"
-      label="New project"
-      onClick={() => (createProjectPanelVisible = true)}
+<PageLayout>
+  <SideBar />
+  <div class="flex flex-col flex-1">
+    <MenuBar title="" />
+    <div class="text-3xl font-semibold px-8 mt-4">Projects</div>
+    <ListProjectsToolbar
+      bind:sort
+      bind:filter
+      bind:displayMode
+      onCreateProjectClick={() => createProjectPanel?.show()}
     />
-
-    <h1 class="text-3xl font-medium">Projects</h1>
-
-    <ul
-      class="mx-auto grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
-    >
-      {#each $projects as project}
-        <li class="list-none">
-          <ProjectItem {project} />
-        </li>
-      {/each}
-    </ul>
+    <div class="">
+      {#if displayMode == "LIST"}
+        <ul>
+          {#each $projects as project}
+            <li class="list-none">
+              <ProjectListItem {project} />
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <ul
+          class="px-8 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4"
+        >
+          {#each $projects as project}
+            <li class="list-none">
+              <ProjectBoardItem {project} />
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
   </div>
-</div>
+</PageLayout>
 
-<PanelCreateProject bind:visible={createProjectPanelVisible} />
+<PanelCreateProject bind:this={createProjectPanel} />

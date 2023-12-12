@@ -6,11 +6,12 @@
   import OverlayPanel from "./OverlayPanel.svelte";
   import CloseIcon from "../icons/CloseIcon.svelte";
   import { projects } from "../stores/projectStore";
+  import { RiCloseLine, RiUploadCloudLine } from "svelte-remixicon";
+  import UserAvatar from "./UserAvatar.svelte";
 
-  export let visible: boolean;
   export let project: Project;
-  export let onMembersSelected: (members: User[]) => void;
 
+  let visible: boolean;
   let username = "";
   let selectedMembers: User[] = [];
   let foundMembers: User[] = []; // find when email change;
@@ -20,14 +21,36 @@
     visible = false;
   }
 
+  export function show() {
+    visible = true;
+  }
+
   function submit() {
-    onMembersSelected(selectedMembers);
+    const newProject = {
+      ...project,
+      members: [...project.members, ...selectedMembers],
+    };
+
+    $projects = $projects.map((p) => {
+      if (p._id == newProject._id) {
+        return newProject;
+      } else {
+        return p;
+      }
+    });
+
+    api
+      .updateProject(newProject)
+      .then()
+      .catch((error) => console.error(error));
+    hide();
   }
 
   // Debounce function to delay API call
   function debounce(func: any, delay: number) {
     let timeoutId: number;
     return function () {
+      // @ts-ignore
       const context = this;
       const args = arguments;
       clearTimeout(timeoutId);
@@ -38,16 +61,14 @@
   }
   async function findUsers() {
     const { users, error } = await api.getUsers({ username });
-    if (error) {
-      console.error(error);
-    } else {
-      foundMemebersVisible = true;
-      foundMembers = users;
-    }
+    if (error) return console.error(error);
+    foundMemebersVisible = true;
+    foundMembers = users;
   }
   function addMember(u: User) {
     selectedMembers = [...selectedMembers, u];
     foundMemebersVisible = false;
+    username = "";
   }
   function removeMember(u: User) {
     const newMembers = selectedMembers.filter((m) => m._id != u._id);
@@ -55,48 +76,65 @@
   }
 </script>
 
-<OverlayPanel bind:visible>
-  <div class="flex flex-col gap-4">
-    <h4 class="font-medium">Invite members</h4>
+{#if visible}
+  <div
+    class="absolute top-0 left-0 w-screen h-screen flex bg-black/50 items-center justify-center"
+  >
+    <div
+      class="bg-white w-full max-w-lg rounded"
+      use:clickOutside
+      on:click_outside={hide}
+    >
+      <div class="flex items-center justify-between p-4">
+        <div class="text-lg font-medium">Add members</div>
+        <div class="flex gap-1">
+          <button
+            class="w-10 h-10 rounded hover:bg-gray-200 flex items-center justify-center"
+            on:click={hide}><RiCloseLine size="20px" /></button
+          >
+        </div>
+      </div>
 
-    <!-- Search and results -->
-    <div class="relative w-full">
-      <input
-        type="text"
-        placeholder="Search for user..."
-        bind:value={username}
-        on:input={debounce(findUsers, 500)}
-        class="w-full boder border-black/20 rounded px-4 h-10 outline-none focus:outline-none focus:ring-0"
-      />
-      {#if foundMemebersVisible}
-        <div
-          class="absolute left-0 bg-white border w-full"
-          use:clickOutside
-          on:click_outside={() => (foundMemebersVisible = false)}
-        >
-          {#each foundMembers as user}
-            <button
-              class="w-full px-4 h-10 rounded-sm hover:bg-gray-100 text-left"
-              on:click={() => addMember(user)}>{user.username}</button
+      <div class="flex flex-col px-4 gap-4">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search for user..."
+            bind:value={username}
+            on:input={debounce(findUsers, 500)}
+            class="w-full boder border-black/20 rounded px-4 h-10 outline-none bg-gray-100 focus:outline-none focus:ring-0 focus:bg-white"
+          />
+          {#if foundMemebersVisible}
+            <div
+              class="absolute left-0 bg-white border w-full h-32 overflow-scroll"
+              use:clickOutside
+              on:click_outside={() => (foundMemebersVisible = false)}
             >
+              {#each foundMembers as user}
+                <button
+                  class="w-full px-4 h-10 rounded-sm hover:bg-gray-100 text-left"
+                  on:click={() => addMember(user)}>{user.username}</button
+                >
+              {/each}
+            </div>
+          {/if}
+        </div>
+        <div class="flex items-center gap-2">
+          {#each selectedMembers as user}
+            <div
+              class="bg-gray-200 rounded-full px-2 h-10 flex items-center gap-1"
+            >
+              <UserAvatar u={user} size={6} />
+              {user.username}
+              <button on:click={() => removeMember(user)}><CloseIcon /></button>
+            </div>
           {/each}
         </div>
-      {/if}
-    </div>
-
-    <div class="flex items-center gap-2">
-      {#each selectedMembers as user}
-        <div class="bg-gray-100 rounded-full px-4 h-8 flex items-center gap-1">
-          {user.username}
-          <button on:click={() => removeMember(user)}><CloseIcon /></button>
-        </div>
-      {/each}
-    </div>
-
-    <div class="border-b"></div>
-    <div class="ml-auto space-x-2">
-      <Button preset="secondary" label="Cancel" onClick={hide} />
-      <Button preset="primary" label="Done" onClick={submit} />
+      </div>
+      <div class="flex items-center justify-end p-4 gap-1">
+        <Button preset="primary" label="Done" onClick={submit} />
+        <Button preset="secondary" label="Cancel" onClick={hide} />
+      </div>
     </div>
   </div>
-</OverlayPanel>
+{/if}

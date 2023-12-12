@@ -4,6 +4,7 @@ export type User = {
   _id: string;
   name: string;
   username: string;
+  avatar_url: string;
 };
 
 export type Project = {
@@ -16,9 +17,21 @@ export type Project = {
 
 export type Task = {
   _id: string;
+  projectId: string;
   name: string;
-  description?: string;
+  description: {
+    text: string;
+    html: string;
+  };
   assignedTo?: User;
   status: "TODO" | "IN_PROGRESS" | "DONE";
   dueDate?: string;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+};
+
+export type Comment = {
+  _id: string;
+  taskId: string;
+  author: User;
+  content: string;
 };

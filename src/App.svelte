@@ -3,7 +3,7 @@
   import { routes } from "./routes";
   import SideBar from "./components/SideBar.svelte";
   import { onMount } from "svelte";
-  import { initializing, authenticated } from "./stores/authStore";
+  import { initializing, authenticated, user } from "./stores/authStore";
   import { api } from "./lib/api";
   import { fetchProjects } from "./stores/projectStore";
   import MenuBar from "./components/MenuBar.svelte";
@@ -13,8 +13,13 @@
   });
 
   async function initAuthStore() {
-    const { authenticated: authed, error } = await api.getAuthenticated();
+    const {
+      authenticated: authed,
+      user: u,
+      error,
+    } = await api.getAuthenticated();
     $authenticated = authed;
+    $user = u;
     $initializing = false;
   }
 
@@ -26,17 +31,7 @@
 {#if $initializing}
   <div>Loading</div>
 {:else}
-  <div class="h-screen flex flex-col text-gray-800">
-    <div class="flex-1 flex">
-      {#if $authenticated}
-        <SideBar />
-      {/if}
-      <div class="flex-1">
-        {#if $authenticated}
-          <MenuBar />
-        {/if}
-        <Router {routes} on:conditionsFailed={handleRouteFailure} />
-      </div>
-    </div>
+  <div class="min-h-screen max-w-full text-gray-800">
+    <Router {routes} on:conditionsFailed={handleRouteFailure} />
   </div>
 {/if}
