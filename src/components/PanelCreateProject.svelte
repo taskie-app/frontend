@@ -1,73 +1,85 @@
 <script lang="ts">
   import { api } from "../lib/api";
-  import { projects } from "../stores/projectStore";
   import Button from "./Button.svelte";
   import { clickOutside } from "../actions/clickOutside";
-  import { RiCloseCircleLine, RiUploadCloudLine } from "svelte-remixicon";
+  import { RiDeleteBinLine, RiCloseLine, RiLinksLine } from "svelte-remixicon";
+  import TextEditor from "./TextEditor.svelte";
+  import type { Project, Task, Comment } from "../lib/types";
+  import TextEditedContent from "./TextEditedContent.svelte";
+  import CommentItem from "./CommentItem.svelte";
+  import SelectStatus from "./Select/SelectStatus.svelte";
+  import SelectAssignee from "./Select/SelectAssignee.svelte";
+  import SelectDate from "./Select/SelectDate.svelte";
+  import SelectPriority from "./Select/SelectPriority.svelte";
   import TextField from "./TextField.svelte";
+  import { projects } from "../stores/projectStore";
+
+  export let project: Project;
+  export let tasks: Task[];
 
   let visible: boolean;
   let name = "";
   let description = "";
 
-  function hide() {
+  export function hide() {
     visible = false;
   }
+
   export function show() {
     visible = true;
   }
-  async function submit() {
+
+  async function createProject() {
+    // update tasks in db
     const { project, error } = await api.createProject(name, description);
-    if (error) {
-      console.error(error);
-    } else {
-      $projects = [...$projects, project];
-      hide();
-    }
+    if (error) return alert(error);
+    // update states
+    $projects = [...$projects, project];
+    hide();
   }
 </script>
 
+<svelte:head>
+  <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+</svelte:head>
+
 {#if visible}
   <div
-    class="absolute top-0 left-0 w-screen h-screen flex bg-black/50 items-center justify-center"
+    class="absolute top-0 left-0 w-full max-w-screen h-screen py-8 flex bg-black/50 items-center justify-center overflow-y-scroll"
   >
+    <div class="h-8"></div>
     <div
-      class="bg-white w-full max-w-lg rounded overflow-hidden"
+      class="bg-white w-full max-w-lg rounded"
       use:clickOutside
       on:click_outside={hide}
     >
       <div class="flex items-center justify-between p-4">
-        <div class="font-medium">Create project</div>
-        <button on:click={hide}><RiCloseCircleLine size="20px" /></button>
-      </div>
-      <div class="flex flex-col p-4 gap-4 bg-slate-50">
-        <button class="">
-          <div
-            class="flex gap-1 items-center justify-center h-48 text-gray-600 bg-white border border-gray-100 rounded"
+        <div class="text-lg font-medium">Create task</div>
+        <div class="flex gap-1">
+          <button
+            class="w-10 h-10 rounded hover:bg-gray-200 flex items-center justify-center"
+            on:click={hide}><RiCloseLine size="20px" /></button
           >
-            <RiUploadCloudLine size="20px" />
-            <div>Upload cover image</div>
-          </div>
-        </button>
+        </div>
+      </div>
+
+      <div class="px-4 space-y-4">
         <TextField
           label="Name"
           bind:value={name}
           placeholder="Enter project name"
+          error={""}
         />
-        <TextField
-          label="Description"
-          bind:value={description}
-          placeholder="Enter project description"
-        />
-        <TextField
-          label="Invite members"
-          bind:value={name}
-          placeholder="Enter email addresses"
-        />
+
+        <div class="space-y-1">
+          <div class="text-sm font-medium">Description</div>
+          <TextEditor bind:htmlContent={description} />
+        </div>
       </div>
-      <div class="flex items-center justify-between p-4">
+
+      <div class="flex items-center justify-end gap-2 p-4">
+        <Button preset="primary" label="Create" onClick={createProject} />
         <Button preset="secondary" label="Cancel" onClick={hide} />
-        <Button preset="primary" label="Create" onClick={submit} />
       </div>
     </div>
   </div>
