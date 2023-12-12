@@ -95,7 +95,7 @@
   >
     <div class="flex items-center justify-between gap-2 py-2">
       <div
-        class="text-lg font-medium bg-sky-100 text-sky-500 px-4 py-0.5 rounded"
+        class="text-lg font-medium bg-blue-500 text-white px-4 py-0.5 rounded"
       >
         Todo
       </div>
@@ -117,7 +117,7 @@
   >
     <div class="flex items-center justify-between gap-2 py-2">
       <div
-        class="text-lg font-medium bg-yellow-100 text-yellow-500 px-4 py-0.5 rounded"
+        class="text-lg font-medium bg-amber-500 text-white px-4 py-0.5 rounded"
       >
         In progress
       </div>
@@ -139,7 +139,7 @@
   >
     <div class="flex items-center justify-between gap-2 py-2">
       <div
-        class="text-lg font-medium bg-green-100 text-green-500 px-4 py-0.5 rounded"
+        class="text-lg font-medium bg-green-500 text-white px-4 py-0.5 rounded"
       >
         Done
       </div>

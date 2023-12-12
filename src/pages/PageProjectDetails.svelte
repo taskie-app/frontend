@@ -106,16 +106,12 @@
         {/if}
 
         {#if tab == ProjectTab.SETTINGS}
-          <ProjectSettings
-            bind:project
-            onInviteMemberClicked={() => panelInviteMember?.show()}
-          />
+          <ProjectSettings bind:project />
         {/if}
       </div>
     </div>
   </PageLayout>
 
-  <PanelInviteMember bind:this={panelInviteMember} {project} />
   <PanelCreateTask bind:this={panelCreateTask} bind:tasks {project} />
   <PanelTaskDetails bind:this={panelTaskDetails} bind:tasks {project} />
 {/if}

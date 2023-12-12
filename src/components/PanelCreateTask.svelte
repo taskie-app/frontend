@@ -38,6 +38,7 @@
   }
 
   async function createTask() {
+    console.log(taskData);
     // update tasks in db
     const { task, error } = await api.createTask(taskData);
     if (error) return console.error(error);

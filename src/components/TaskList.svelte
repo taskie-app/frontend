@@ -17,9 +17,15 @@
   export let onCreateTaskClicked: () => void;
   export let onTaskSelected: (task: Task) => void;
 
+  const PRIORITY_VALUE = {
+    HIGH: 2,
+    MEDIUM: 1,
+    LOW: 0,
+  };
+
   const sortFunctions = {
-    name: (t1: Task, t2: Task) => (t1.name > t2.name ? 1 : -1),
-    "-name": (t1: Task, t2: Task) => (t1.name > t2.name ? -1 : 1),
+    name: (t1: Task, t2: Task) => (t1.name > t2.name ? -1 : 1),
+    "-name": (t1: Task, t2: Task) => (t1.name > t2.name ? 1 : -1),
     date: (t1: Task, t2: Task) => {
       if (t1.dueDate && t2.dueDate) return t1.dueDate > t2.dueDate ? 1 : -1;
       if (!t1.dueDate && !t2.dueDate) return 0;
@@ -30,6 +36,10 @@
       if (!t1.dueDate && !t2.dueDate) return 0;
       return t1.dueDate ? -1 : 1;
     },
+    priority: (t1: Task, t2: Task) =>
+      PRIORITY_VALUE[t1.priority] > PRIORITY_VALUE[t2.priority] ? -1 : 1,
+    "-priority": (t1: Task, t2: Task) =>
+      PRIORITY_VALUE[t1.priority] > PRIORITY_VALUE[t2.priority] ? 1 : -1,
   };
 
   let sort: keyof typeof sortFunctions;
@@ -92,8 +102,10 @@
       >
         <option value="name">Name A-Z</option>
         <option value="-name">Name Z-A</option>
-        <option value="date">Due date</option>
-        <option value="-date">Due date</option>
+        <option value="date">Due date: Soonest</option>
+        <option value="-date">Due date: Latest</option>
+        <option value="priority">Priority High to Low</option>
+        <option value="-priority">Priority Low to High</option>
       </select>
     </button>
   </div>
