@@ -17,12 +17,16 @@
   export let tasks: Task[];
 
   let visible: boolean;
-  // @ts-ignore
-  let task: Task = {
+  let taskData: Omit<Task, "_id"> = {
     projectId: project._id,
     name: "",
-    description: "",
+    description: {
+      text: "",
+      html: "",
+    },
     status: "TODO",
+    assignedTo: undefined,
+    priority: "LOW",
   };
 
   export function hide() {
@@ -34,12 +38,12 @@
   }
 
   async function createTask() {
+    console.log(taskData);
+    // update tasks in db
+    const { task, error } = await api.createTask(taskData);
+    if (error) return console.error(error);
     // update states
     tasks = [...tasks, task];
-
-    // update tasks in db
-    const { error } = await api.createTask(task);
-    if (error) return console.error(error);
     hide();
   }
 </script>
@@ -71,24 +75,27 @@
       <div class="px-4 space-y-4">
         <TextField
           label="Name"
-          bind:value={task.name}
+          bind:value={taskData.name}
           placeholder="Enter task name"
           error={""}
         />
 
         <div class="space-y-1">
           <div class="text-sm font-medium">Description</div>
-          <TextEditor />
+          <TextEditor
+            bind:textContent={taskData.description.text}
+            bind:htmlContent={taskData.description.html}
+          />
         </div>
 
-        <SelectStatus bind:status={task.status} />
+        <SelectStatus bind:status={taskData.status} />
 
         <SelectAssignee
-          bind:assignee={task.assignedTo}
+          bind:assignee={taskData.assignedTo}
           members={project.members}
         />
 
-        <SelectDate bind:date={task.dueDate} />
+        <SelectDate bind:date={taskData.dueDate} />
 
         <SelectPriority priority="HIGH" />
       </div>
