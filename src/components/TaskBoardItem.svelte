@@ -14,10 +14,10 @@
   on:click={() => onTaskSelected(task)}
   class="text-left"
 >
-  <div class="border rounded bg-white p-4 space-y-8 overflow-hidden">
+  <div class=" rounded-sm shadow bg-white p-4 space-y-8 overflow-hidden">
     <div>
       <h1 class="text-xl font-medium">{task.name}</h1>
-      <p class="text-gray-400">{task.description}</p>
+      <p class="text-gray-400">{task.description.text}</p>
     </div>
     <div class="flex items-center justify-between">
       <div class="flex items-center text-gray-400 space-x-1">

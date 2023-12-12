@@ -9,10 +9,9 @@
   import TextEditor from "./TextEditor.svelte";
   import Select from "./Select/Select.svelte";
   import MemberListItem from "./MemberListItem.svelte";
-  import PanelInviteMember from "./PanelInviteMember.svelte";
 
   export let project: Project;
-  export let panelInviteMember;
+  export let onInviteMemberClicked: () => void;
   let newProject = project;
 
   async function updateProject() {
@@ -96,14 +95,13 @@
       <div class="text-lg font-medium">Members</div>
       <button
         class="flex items-center gap-1 text-brand-500"
-        on:click={() => panelInviteMember?.show()}
+        on:click={onInviteMemberClicked}
       >
         <RiAddCircleLine size="18px" />
         <div class="">Add</div>
       </button>
     </div>
-
-    {#each newProject.members as member}
+    {#each project.members as member}
       <MemberListItem {member} onDeleteMemberClicked={deleteMember} />
     {/each}
   </div>

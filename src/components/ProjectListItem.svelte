@@ -1,9 +1,9 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import type { Project } from "../lib/types";
+  import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
-  let members = Array(5).fill(0);
 </script>
 
 <div
@@ -23,11 +23,11 @@
     </div>
     <div class="text-sm text-gray-400">Tasks completed</div>
   </div>
-  <div class="flex -space-x-2">
-    {#each members as member}
-      <div
-        class="w-10 h-10 rounded-full bg-gray-400 border-2 border-white"
-      ></div>
+  <div class="flex -space-x-2 w-32 justify-end">
+    {#each project.members as member}
+      <div class="border-2 border-white rounded-full">
+        <UserAvatar u={member} size={10} />
+      </div>
     {/each}
   </div>
 </div>

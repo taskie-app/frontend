@@ -10,11 +10,11 @@
   export let disabled = false;
   export let fluid = false;
   const baseClass =
-    "flex items-center justify-center px-4 h-8 rounded-sm text-sm font-medium transition-all duration-100";
+    "flex items-center justify-center px-4 rounded text-sm font-medium transition-all duration-100";
   $: borderClass = rounded ? "rounded-full" : "";
   $: buttonClass = `${baseClass} ${PRESETS[preset]} ${borderClass} ${
     disabled ? "opacity-50" : ""
-  } ${fluid && "w-full"}`;
+  } ${fluid ? "w-full h-10" : "h-8"}`;
   export let onClick: () => void;
 </script>
 
