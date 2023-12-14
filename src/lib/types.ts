@@ -31,7 +31,7 @@ export type Task = {
 
 export type Comment = {
   _id: string;
-  taskId: string;
+  task: string;
   author: User;
   content: string;
 };

@@ -36,6 +36,10 @@
   }
 </script>
 
+<svelte:head>
+  <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+</svelte:head>
+
 <div>
   <div id="editor" />
 </div>

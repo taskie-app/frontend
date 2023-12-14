@@ -17,10 +17,16 @@
   class="flex flex-col w-[240px] h-screen sticky top-0 left-0 border-r bg-gray-100 p-4"
 >
   <div class="flex gap-2 items-center">
-    <div class="w-10 h-10 rounded bg-gray-200"></div>
+    <div
+      class="w-10 h-10 bg-gray-200 text-gray-400 uppercase text-sm font-bold flex items-center justify-center rounded"
+    >
+      {project.name.slice(0, 2)}
+    </div>
     <div class="space-y-0.5">
       <div class="font-medium leading-none">{project.name}</div>
-      <div class="text-gray-400 text-sm leading-none">Marketing</div>
+      <div class="text-gray-400 text-sm leading-none">
+        {@html project.description}
+      </div>
     </div>
   </div>
 

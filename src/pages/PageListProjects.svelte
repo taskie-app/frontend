@@ -29,7 +29,7 @@
 <PageLayout>
   <SideBar />
   <div class="flex flex-col flex-1">
-    <MenuBar title="" />
+    <!-- <MenuBar title="" /> -->
     <div class="text-3xl font-semibold px-8 mt-4">Projects</div>
     <ListProjectsToolbar
       bind:sort

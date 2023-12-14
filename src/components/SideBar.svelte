@@ -1,15 +1,29 @@
 <script>
-  import { link } from "svelte-spa-router";
-  import { RiBriefcaseLine, RiCalendarTodoLine } from "svelte-remixicon";
+  import { link, replace } from "svelte-spa-router";
+  import {
+    RiBriefcaseLine,
+    RiTaskFill,
+    RiLogoutBoxRLine,
+    RiUser3Line,
+  } from "svelte-remixicon";
   import UserAvatar from "./UserAvatar.svelte";
   import { projects } from "../stores/projectStore";
+  import { api } from "../lib/api";
+  import { authenticated, user } from "../stores/authStore";
+  async function signOut() {
+    await api.signOut();
+    $authenticated = false;
+    $user = null;
+    replace("/sign-in");
+  }
 </script>
 
 <div
   class="flex flex-col w-[64px] hover:w-[256px] h-screen fixed z-20 top-0 left-0 transition-all duration-300 bg-brand-500 overflow-hidden"
 >
   <div class="w-16 text-center flex items-center justify-center py-4">
-    <div class="w-8 h-8 bg-white"></div>
+    <!-- <div class="w-8 h-8 bg-white"></div> -->
+    <RiTaskFill size="32px" color="white" />
   </div>
   <a href="/projects" use:link>
     <div
@@ -39,14 +53,25 @@
   {/each}
 
   <div class="flex-1"></div>
+
   <a href="/profile" use:link>
     <div
       class="flex items-center w-[256px] py-4 hover:bg-brand-400 font-medium text-white text-sm uppercase"
     >
       <div class="w-[64px] flex items-center justify-center">
-        <UserAvatar />
+        <RiUser3Line size="20px" />
       </div>
-      <div>Account</div>
+      <div>Profile</div>
     </div>
   </a>
+  <button on:click={signOut}>
+    <div
+      class="flex items-center w-[256px] py-4 hover:bg-brand-400 font-medium text-white text-sm uppercase"
+    >
+      <div class="w-[64px] flex items-center justify-center">
+        <RiLogoutBoxRLine size="20px" />
+      </div>
+      <div>Sign out</div>
+    </div>
+  </button>
 </div>

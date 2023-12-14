@@ -1,9 +1,12 @@
 <script lang="ts">
   import type { Comment } from "../lib/types";
   import Button from "../components/Button.svelte";
+  import UserAvatar from "./UserAvatar.svelte";
+  import { api } from "../lib/api";
 
   export let comment: Comment;
-  export let onCommentUpdated: (updatedCommnet: Comment) => void;
+  $: newComment = comment;
+  export let onCommentUpdated: (updatedComment: Comment) => void;
   export let onCommentDeleted: (deletedComment: Comment) => void;
 
   let editing = false;
@@ -12,20 +15,31 @@
   let editable = true;
   let deletable = true;
 
-  function updateComment() {}
+  async function updateComment() {
+    const { error } = await api.updateComment(newComment);
+    if (error) return alert(error);
+    comment = newComment;
+    editing = false;
+    onCommentUpdated(newComment);
+  }
 
-  function deleteComment() {}
+  async function deleteComment() {
+    if (!confirm("Are you sure you want to delete this comment?")) return;
+    const { error } = await api.deletComment(comment);
+    if (error) return alert(error);
+    onCommentDeleted(comment);
+  }
 </script>
 
-<div class="flex py-1 gap-2">
+<div class="flex py-2 gap-2">
   <!-- <img src="" alt="" srcset="" class="w-8 h-8 rounded-full" /> -->
-  <div class="w-8 h-8 rounded-full bg-gray-100"></div>
+  <UserAvatar u={comment.author} />
   <div class="w-full">
     {#if editing}
       <input
         type="text"
         class="w-full rounded-sm border-gray-300"
-        bind:value={comment.content}
+        bind:value={newComment.content}
       />
       <div class="flex gap-1 mt-2">
         <Button preset="primary" label="Save" onClick={updateComment} />
@@ -36,7 +50,7 @@
         />
       </div>
     {:else}
-      <div class="font-semibold">{comment.author.username}</div>
+      <div class="font-semibold leading-none">{comment.author.username}</div>
       <div>
         {comment.content}
       </div>

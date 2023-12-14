@@ -33,12 +33,12 @@
   role="button"
 >
   <div class="col-span-2 flex items-center gap-2">
-    <input
+    <!-- <input
       type="checkbox"
       value=""
       class="w-5 h-5 rounded"
       checked={task.status == "DONE"}
-    />
+    /> -->
     <div class="font-medium">
       {task.name}
     </div>

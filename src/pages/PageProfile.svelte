@@ -99,7 +99,7 @@
         <Button preset="primary" label="Save changes" onClick={updateProfile} />
       </div>
 
-      <div class="text-lg font-medium mt-4 mb-1">Password</div>
+      <!-- <div class="text-lg font-medium mt-4 mb-1">Password</div>
       <div class="space-y-4">
         <TextField
           label="Old password"
@@ -118,7 +118,7 @@
           label="Change password"
           onClick={updateProfile}
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </PageLayout>
