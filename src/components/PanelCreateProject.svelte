@@ -54,7 +54,7 @@
       on:click_outside={hide}
     >
       <div class="flex items-center justify-between p-4">
-        <div class="text-lg font-medium">Create task</div>
+        <div class="text-lg font-medium">Create project</div>
         <div class="flex gap-1">
           <button
             class="w-10 h-10 rounded hover:bg-gray-200 flex items-center justify-center"

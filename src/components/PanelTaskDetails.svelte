@@ -11,6 +11,7 @@
   import SelectAssignee from "./Select/SelectAssignee.svelte";
   import SelectDate from "./Select/SelectDate.svelte";
   import SelectPriority from "./Select/SelectPriority.svelte";
+  import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
   export let tasks: Task[];
@@ -21,6 +22,7 @@
   $: task, fetchComments();
   $: task, console.log(task);
   let commentContent = "";
+  $: members = [project.manager, ...project.members];
   $: status = task?.status;
   $: assignee = task?.assignedTo;
   $: dueDate = task?.dueDate;
@@ -83,6 +85,16 @@
     tasks = tasks.filter((t) => t._id != task._id);
     hide();
   }
+
+  async function handleCommentUpdated(updatedComment) {
+    comments = comments.map((c) =>
+      c._id == updatedComment._id ? updatedComment : c
+    );
+  }
+
+  async function handleCommentDeleted(deletedComment) {
+    comments = comments.filter((c) => c._id != deletedComment._id);
+  }
 </script>
 
 <svelte:head>
@@ -100,13 +112,7 @@
       on:click_outside={hide}
     >
       <div class="flex items-center justify-between p-4">
-        <button
-          class="px-4 h-10 rounded hover:bg-gray-200 flex items-center justify-center text-sm font-medium gap-2"
-          on:click={hide}
-        >
-          <RiLinksLine size="16px" />
-          Copy link
-        </button>
+        <div class="text-lg font-medium">Task details</div>
         <div class="flex gap-1">
           <button
             class="w-10 h-10 rounded text-red-500 hover:bg-gray-200 flex items-center justify-center"
@@ -166,7 +172,7 @@
             <div class="font-medium mb-2">Comments</div>
             <div class="flex py-1 gap-2">
               <!-- <img src="" alt="" srcset="" class="w-8 h-8 rounded-full" /> -->
-              <div class="w-8 h-8 rounded-full bg-gray-100"></div>
+              <UserAvatar />
               <div class="w-full">
                 <input
                   type="text"
@@ -180,7 +186,11 @@
               </div>
             </div>
             {#each comments as comment}
-              <CommentItem {comment} />
+              <CommentItem
+                {comment}
+                onCommentUpdated={handleCommentUpdated}
+                onCommentDeleted={handleCommentDeleted}
+              />
             {/each}
           </div>
         </div>
@@ -188,10 +198,7 @@
         <div class="space-y-4 px-4">
           <SelectStatus bind:status={task.status} />
 
-          <SelectAssignee
-            bind:assignee={task.assignedTo}
-            members={project.members}
-          />
+          <SelectAssignee bind:assignee={task.assignedTo} {members} />
 
           <SelectDate bind:date={task.dueDate} />
 

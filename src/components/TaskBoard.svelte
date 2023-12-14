@@ -75,7 +75,7 @@
           assigneeFilter = null;
         }}
       >
-        <UserAvatar u={member} />
+        <UserAvatar size={10} u={member} />
       </button>
     {/each}
   </div>
@@ -93,7 +93,7 @@
       },
     }}
   >
-    <div class="flex items-center justify-between gap-2 py-2">
+    <div class="flex items-center justify-between gap-2">
       <div
         class="text-lg font-medium bg-blue-500 text-white px-4 py-0.5 rounded"
       >
@@ -115,7 +115,7 @@
       },
     }}
   >
-    <div class="flex items-center justify-between gap-2 py-2">
+    <div class="flex items-center justify-between gap-2">
       <div
         class="text-lg font-medium bg-amber-500 text-white px-4 py-0.5 rounded"
       >
@@ -137,7 +137,7 @@
       },
     }}
   >
-    <div class="flex items-center justify-between gap-2 py-2">
+    <div class="flex items-center justify-between gap-2">
       <div
         class="text-lg font-medium bg-green-500 text-white px-4 py-0.5 rounded"
       >

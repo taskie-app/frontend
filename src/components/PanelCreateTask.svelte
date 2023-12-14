@@ -97,7 +97,7 @@
 
         <SelectDate bind:date={taskData.dueDate} />
 
-        <SelectPriority priority="HIGH" />
+        <SelectPriority bind:priority={taskData.priority} />
       </div>
 
       <div class="flex items-center justify-end gap-2 p-4">

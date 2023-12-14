@@ -17,6 +17,8 @@
   export let onCreateTaskClicked: () => void;
   export let onTaskSelected: (task: Task) => void;
 
+  $: members = [project.manager, ...project.members];
+
   const PRIORITY_VALUE = {
     HIGH: 2,
     MEDIUM: 1,
@@ -75,7 +77,7 @@
   />
 
   <div class="flex items-center gap-1">
-    {#each project.members as member}
+    {#each members as member}
       <button
         class:border-brand-500={assigneeFilter?._id == member._id}
         class="border-2 rounded-full transition-all duration-100 hover:scale-110"
