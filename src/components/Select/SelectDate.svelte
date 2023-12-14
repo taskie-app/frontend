@@ -3,7 +3,7 @@
 </script>
 
 <div class="space-y-0.5">
-  <div class="text-xs font-semibold text-gray-600">DUE DATE</div>
+  <div class="text-sm font-medium">Due date</div>
   <div class="relative w-full">
     <input
       type="date"

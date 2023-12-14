@@ -29,7 +29,7 @@
 </script>
 
 <div class="space-y-0.5">
-  <div class="text-xs font-semibold text-gray-600">STATUS</div>
+  <div class="text-sm font-medium">Status</div>
   <div class="relative w-full">
     <button
       class={`w-full flex items-center justify-between rounded px-3 h-10 text-left text-sm text-white font-medium ${CLASS_BY_STATUS[status]}`}

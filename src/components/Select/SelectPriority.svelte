@@ -24,7 +24,7 @@
 </script>
 
 <div class="space-y-0.5">
-  <div class="text-xs font-semibold text-gray-600">PRIORITY</div>
+  <div class="text-sm font-medium">Priority</div>
   <div class="relative w-full">
     <button
       class="w-full flex items-center justify-start gap-1 rounded px-3 h-10 text-left text-sm font-medium bg-gray-200"
