@@ -4,6 +4,7 @@
   import { authenticated, user } from "../stores/authStore";
   import { api } from "../lib/api";
   import TextField from "../components/TextField.svelte";
+  import PasswordField from "../components/PasswordField.svelte";
   import Button from "../components/Button.svelte";
 
   let username = "";
@@ -53,7 +54,7 @@
         placeholder="Enter your username"
         error={usernameError}
       />
-      <TextField
+      <PasswordField
         label="Password"
         bind:value={password}
         placeholder="Enter your password"

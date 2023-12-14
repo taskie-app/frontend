@@ -157,6 +157,23 @@ class Api {
     const { comments, error } = data;
     return { comments, error };
   }
+
+  async updateComment(comment: Comment) {
+    const { data } = await this.axios.put(
+      `tasks/${comment.task}/comments/${comment._id}`,
+      comment
+    );
+    const { error } = data;
+    return { error };
+  }
+
+  async deletComment(comment: Comment) {
+    const { data } = await this.axios.delete(
+      `tasks/${comment.task}/comments/${comment._id}`
+    );
+    const { error } = data;
+    return { error };
+  }
 }
 
 export const api = new Api(API_BASE_URL);

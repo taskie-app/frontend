@@ -4,6 +4,7 @@
   import UserAvatar from "./UserAvatar.svelte";
 
   export let project: Project;
+  $: members = [project.manager, ...project.members];
 </script>
 
 <div
@@ -35,7 +36,7 @@
   </div>
 
   <div class="flex -space-x-2 mt-6">
-    {#each project.members as member}
+    {#each members as member}
       <div class="border-2 border-white rounded-full">
         <UserAvatar u={member} size={10} />
       </div>

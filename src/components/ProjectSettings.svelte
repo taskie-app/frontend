@@ -12,8 +12,8 @@
   import PanelInviteMember from "./PanelInviteMember.svelte";
 
   export let project: Project;
-  export let panelInviteMember;
-  let newProject = project;
+  export let panelInviteMember: any;
+  $: newProject = project;
 
   async function updateProject() {
     const { project: updatedProject, error } =

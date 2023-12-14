@@ -20,7 +20,7 @@
 </script>
 
 <div class="space-y-0.5">
-  <div class="text-xs font-semibold text-gray-600">ASSIGNEE</div>
+  <div class="text-sm font-medium">Assignee</div>
   <div class="relative w-full">
     <button
       class="w-full flex items-center gap-1 rounded px-3 h-10 text-left text-sm font-medium bg-gray-200"
