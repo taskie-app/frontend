@@ -31,7 +31,7 @@
       </select>
     </button>
   </div>
-  <div class="flex items-center gap-1">
+  <!-- <div class="flex items-center gap-1">
     <RiFilterLine class="text-gray-400" size="18px" />
     <div class="text-sm font-medium text-gray-400">FILTER</div>
     <button class="text-sm font-medium flex items-center ml-2">
@@ -42,9 +42,9 @@
         <option>Done</option>
       </select>
 
-      <!-- <ChevronDownIcon class="w-5" /> -->
+      <ChevronDownIcon class="w-5" />
     </button>
-  </div>
+  </div> -->
   <div class="flex-1"></div>
   <button
     class={`flex items-center gap-1 ${displayMode != "LIST" && "opacity-50"}`}
