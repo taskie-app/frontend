@@ -10,6 +10,8 @@
   import Select from "./Select/Select.svelte";
   import MemberListItem from "./MemberListItem.svelte";
   import PanelInviteMember from "./PanelInviteMember.svelte";
+  import { toast } from "@zerodevx/svelte-toast";
+  import { toastSuccess } from "../lib/toast";
 
   export let project: Project;
   export let panelInviteMember: any;
@@ -23,9 +25,11 @@
     $projects = $projects.map((p) =>
       p._id == updatedProject._id ? updatedProject : p
     );
+    toastSuccess("Successfully updated project");
   }
 
   async function deleteProject() {
+    if (!confirm(`Are you sure you want to delete this project?`)) return;
     const { error } = await api.deleteProject(newProject._id);
     if (error) return alert(error);
     $projects = $projects.filter((p) => p._id != newProject._id);
@@ -76,7 +80,7 @@
     />
   </div>
 
-  <div class="mt-4">
+  <!-- <div class="mt-4">
     <Select
       value="Marketing"
       options={[
@@ -85,7 +89,7 @@
       ]}
       label="Category"
     />
-  </div>
+  </div> -->
 
   <div class="mt-4">
     <Button preset="primary" label="Save changes" onClick={updateProject} />

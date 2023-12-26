@@ -46,7 +46,7 @@
     </button>
   </div> -->
   <div class="flex-1"></div>
-  <button
+  <!-- <button
     class={`flex items-center gap-1 ${displayMode != "LIST" && "opacity-50"}`}
     on:click={() => (displayMode = "LIST")}
   >
@@ -59,7 +59,7 @@
   >
     <RiDashboardLine size="18px" />
     <div class="text-sm font-medium">BOARD</div>
-  </button>
+  </button> -->
   <button
     class="flex items-center gap-1 text-brand-500"
     on:click={onCreateProjectClick}

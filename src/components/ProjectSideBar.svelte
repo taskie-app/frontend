@@ -14,7 +14,7 @@
 </script>
 
 <div
-  class="flex flex-col w-[240px] h-screen sticky top-0 left-0 border-r bg-gray-100 p-4"
+  class="flex flex-col w-[280px] h-screen sticky top-0 left-0 border-r bg-gray-100 p-4"
 >
   <div class="flex gap-2 items-center">
     <div
@@ -22,9 +22,11 @@
     >
       {project.name.slice(0, 2)}
     </div>
-    <div class="space-y-0.5">
+    <div class="space-y-0.5 flex-1">
       <div class="font-medium leading-none">{project.name}</div>
-      <div class="text-gray-400 text-sm leading-none">
+      <div
+        class="text-gray-400 text-sm leading-none text-ellipsis line-clamp-1"
+      >
         {@html project.description}
       </div>
     </div>

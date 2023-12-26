@@ -15,6 +15,7 @@
 
   export let project: Project;
   export let tasks: Task[];
+  $: members = [project.manager, ...project.members];
 
   let visible: boolean;
   let taskData: Omit<Task, "_id"> = {
@@ -44,6 +45,17 @@
     if (error) return console.error(error);
     // update states
     tasks = [...tasks, task];
+    taskData = {
+      projectId: project._id,
+      name: "",
+      description: {
+        text: "",
+        html: "",
+      },
+      status: "TODO",
+      assignedTo: undefined,
+      priority: "LOW",
+    };
     hide();
   }
 </script>
@@ -90,10 +102,7 @@
 
         <SelectStatus bind:status={taskData.status} />
 
-        <SelectAssignee
-          bind:assignee={taskData.assignedTo}
-          members={project.members}
-        />
+        <SelectAssignee bind:assignee={taskData.assignedTo} {members} />
 
         <SelectDate bind:date={taskData.dueDate} />
 

@@ -18,8 +18,9 @@
   let createProjectPanel: any;
 
   let sort: keyof typeof sortFunctions = "name";
-  let filter = "done";
   let displayMode: "LIST" | "BOARD" = "BOARD";
+
+  $: sortedProjects = $projects.sort(sortFunctions[sort]);
 
   onMount(() => {
     fetchProjects();
@@ -33,14 +34,13 @@
     <div class="text-3xl font-semibold px-8 mt-4">Projects</div>
     <ListProjectsToolbar
       bind:sort
-      bind:filter
       bind:displayMode
       onCreateProjectClick={() => createProjectPanel?.show()}
     />
     <div class="">
       {#if displayMode == "LIST"}
         <ul>
-          {#each $projects as project}
+          {#each sortedProjects as project}
             <li class="list-none">
               <ProjectListItem {project} />
             </li>
@@ -50,7 +50,7 @@
         <ul
           class="px-8 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4"
         >
-          {#each $projects as project}
+          {#each sortedProjects as project}
             <li class="list-none">
               <ProjectBoardItem {project} />
             </li>

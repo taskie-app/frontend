@@ -31,9 +31,9 @@
     <div class="text-sm text-gray-400">Tasks completed</div>
   </div> -->
 
-  <div class="bg-green-100 text-sm text-green-500 px-3 py-1 rounded mt-1">
-    Marketing
-  </div>
+  <!-- <div class="bg-green-100 text-sm text-green-500 px-3 py-1 rounded mt-1">
+    {@html project.description.slice(0, 10)}
+  </div> -->
 
   <div class="flex -space-x-2 mt-6">
     {#each members as member}

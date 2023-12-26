@@ -8,6 +8,7 @@
   import TextField from "../components/TextField.svelte";
   import Button from "../components/Button.svelte";
   import SideBar from "../components/SideBar.svelte";
+  import { toastError, toastSuccess } from "../lib/toast";
 
   let newUser: User;
   // newUser is a copy of user, every change will bind to newUser
@@ -54,6 +55,7 @@
     const { error: updateError } = await api.updateUser(newUser);
     if (updateError) return alert(updateError);
     $user = newUser;
+    toastSuccess("Successfully updated profile");
   }
 </script>
 
@@ -62,11 +64,7 @@
   <div class="p-8 w-full">
     <div class="w-full max-w-2xl mx-auto">
       <div class="text-gray-400">
-        <a href="/projects" use:link> Projects </a>
-        /
-        <a href="/projects" use:link> dasdas </a>
-        /
-        <span>Profiel</span>
+        <!-- <span>Profile</span> -->
       </div>
       <div class="text-3xl font-semibold mt-4 mb-4">Profile settings</div>
 

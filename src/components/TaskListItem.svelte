@@ -39,18 +39,16 @@
       class="w-5 h-5 rounded"
       checked={task.status == "DONE"}
     /> -->
-    <div class="font-medium">
+    <div class="w-64 font-medium">
       {task.name}
     </div>
   </div>
 
-  <div class="col-span-2">
-    <div class="block overflow-hidden text-ellipsis max-w-full text-gray-400">
-      {task.description?.text}
-    </div>
+  <div class="flex-1 text-ellipsis text-gray-400 line-clamp-1">
+    {task.description?.text}
   </div>
-  <div class="flex-1"></div>
-  <div class="flex justify-end">
+
+  <div class="w-24 flex justify-end">
     <div
       class={`flex items-center bg-gray-200 px-2 rounded-sm font-medium text-sm  py-1`}
     >

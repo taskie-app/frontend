@@ -42,6 +42,7 @@
     );
     if (error) return alert(error);
     comments = [...comments, comment];
+    commentContent = "";
   }
 
   async function fetchComments() {

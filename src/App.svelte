@@ -7,6 +7,8 @@
   import { api } from "./lib/api";
   import { fetchProjects } from "./stores/projectStore";
   import MenuBar from "./components/MenuBar.svelte";
+  import { SvelteToast } from "@zerodevx/svelte-toast";
+
   onMount(() => {
     initAuthStore();
     fetchProjects();
@@ -35,3 +37,5 @@
     <Router {routes} on:conditionsFailed={handleRouteFailure} />
   </div>
 {/if}
+
+<SvelteToast />
