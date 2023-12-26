@@ -73,7 +73,7 @@
         <div class="space-y-1">
           <div class="text-sm font-medium">Avatar</div>
           <img
-            src={newUser.avatar_url}
+            src={newUser?.avatar_url}
             class="w-32 h-32 rounded bg-gray-200 object-cover"
             alt="User avatar"
           />

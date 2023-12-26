@@ -12,9 +12,9 @@
   import { authenticated, user } from "../stores/authStore";
   async function signOut() {
     await api.signOut();
-    $authenticated = false;
-    $user = null;
     replace("/sign-in");
+    $authenticated = false;
+    // $user = null;
   }
 </script>
 
